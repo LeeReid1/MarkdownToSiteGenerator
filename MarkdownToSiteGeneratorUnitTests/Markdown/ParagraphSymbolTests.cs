@@ -25,9 +25,6 @@ My paragraph
 My other paragraph
 still the second paragraph
 ";
-         var matches = h.GetMatches(text).ToArray();
-
-
 
          SymbolisedTextWithChildren[] symbols = h.ToSymbolisedText(text).ToArray();
          Assert.AreEqual(2, symbols.Length);

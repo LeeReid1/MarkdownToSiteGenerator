@@ -26,6 +26,6 @@ namespace MarkdownToSiteGenerator
       }
 
       [MethodImpl(MethodImplOptions.AggressiveInlining)]
-      public static SimpleRange Empty(int start) => new SimpleRange(start, start);
+      public static SimpleRange Empty(int start) => new(start, start);
    }
 }

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MarkdownToSiteGenerator.Markdown
+﻿namespace MarkdownToSiteGenerator.Markdown
 {
-    internal class MarkdownParser
+   internal class MarkdownParser
    {
-      IReadOnlyList<TopLevelObjectParser> topLevelParsers { get; } = new List<TopLevelObjectParser>()
+      readonly IReadOnlyList<TopLevelObjectParser> topLevelParsers = new List<TopLevelObjectParser>()
       {
          new HeaderSymbolParser(1),
          new HeaderSymbolParser(2),

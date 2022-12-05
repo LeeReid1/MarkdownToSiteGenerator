@@ -42,9 +42,9 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void TakeWhileType_None()
       {
-         List<object> list = new List<object>()
+         List<object> list = new()
          {
-            1,2,3,"cat","bean",11, "frank"
+            1, 2, 3, "cat", "bean", 11, "frank"
          };
 
          string[] items = list.TakeWhileType<object, string>().ToArray();
@@ -54,7 +54,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void TakeWhileType()
       {
-         List<object> list = new List<object>()
+         List<object> list = new()
          {
             1,2,3,"cat","bean",11, "frank"
          };
@@ -69,7 +69,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void TakeWhileType_End()
       {
-         List<object> list = new List<object>()
+         List<object> list = new()
          {
             1,2,3,"cat","bean",11, "frank"
          };
