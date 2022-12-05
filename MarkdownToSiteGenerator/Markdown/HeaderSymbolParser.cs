@@ -2,20 +2,20 @@
 
 namespace MarkdownToSiteGenerator.Markdown
 {
-    internal class HeaderSymbolParser : TopLevelObjectParser
+   internal class HeaderSymbolParser : TopLevelObjectParser
    {
-        readonly byte level;
-        protected override string RegexStr { get; }
+      readonly byte level;
+      protected override string RegexStr { get; }
 
-        public HeaderSymbolParser(byte level) : base()
-        {
-            this.level = level;
-            RegexStr = @"(^[\s-[\r\n]]*#{" + level + @"}[\s-[\r\n]]+)(.*?(?:\r\n|\r|\n|$))";
-        }
+      public HeaderSymbolParser(byte level)
+      {
+         this.level = level;
+         RegexStr = @"(^[\s-[\r\n]]*#{" + level + @"}[\s-[\r\n]]+)([^(?:\n|\r)]*)(\r\n|\n|$)";
+      }
 
-        public override SymbolisedTextWithChildren ToSymbolisedText(SymbolLocation location)
-        {
-            return new Heading(location, level);
-        }
-    }
+      public override SymbolisedTextWithChildren ToSymbolisedText(SymbolLocation location)
+      {
+         return new Heading(location, level);
+      }
+   }
 }

@@ -1,4 +1,4 @@
-﻿namespace MarkdownToSiteGenerator.Markdown
+﻿namespace MarkdownToSiteGenerator
 {
     /// <summary>
     /// Represents an item in an ordered list of bullet points
@@ -8,7 +8,7 @@
         public bool Ordered { get; }
         public ListItem(SymbolLocation location, bool ordered) : base(location)
         {
-            this.Ordered = ordered;
+            Ordered = ordered;
         }
-   }
+    }
 }

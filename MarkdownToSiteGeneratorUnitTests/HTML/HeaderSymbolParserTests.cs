@@ -6,27 +6,19 @@ using System.Text;
 namespace MarkdownToSiteGeneratorUnitTests.HTML
 {
    [TestClass]
-   public class HeaderSymbolParserTests
+   public class ListItemTests
    {
-      
-      [TestInitialize]
-      public void Initialize()
-      {
-      }
-
 
       [TestMethod]
-      public void ToHTMLSymbols()
+      public void ToHTML()
       {
-         string raw =
-"1. point 1";
+         string raw = "1. point 1";
 
          MarkdownToSiteGenerator.Markdown.OrderedListItemParser op = new OrderedListItemParser();
          var symbol = op.ToSymbolisedText(raw).First();
 
-         HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(symbol);
+         HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(symbol, raw);
 
-         Assert.AreEqual(0, made.Children[0]);
          Assert.IsInstanceOfType(made, typeof(MarkdownToSiteGenerator.HTML.ListItem));
 
          MarkdownToSiteGenerator.HTML.ListItem li = (MarkdownToSiteGenerator.HTML.ListItem)made;
@@ -34,16 +26,6 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
          StringBuilder sb = new();
 
          Assert.AreEqual("<li>point 1</li>", li.Write(sb).ToString());
-
-         Assert.Fail("should have an <ol> before the li");
       }
-      
-      
-      [TestMethod]
-      public void GetMatches_NoneToFind(byte level)
-      {
-         Assert.Fail();
-      }
-      
    }
 }

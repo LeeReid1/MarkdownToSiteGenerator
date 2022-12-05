@@ -1,7 +1,7 @@
 using MarkdownToSiteGenerator;
 using MarkdownToSiteGenerator.Markdown;
 
-namespace MarkdownToSiteGeneratorUnitTests
+namespace MarkdownToSiteGeneratorUnitTests.Markdown
 {
    [TestClass]
    public class HeaderSymbolParserTests
@@ -14,7 +14,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       KeyValuePair<string, bool>[] GetLineMatches(int noHashes)
       {
          string hashes = string.Concat(Enumerable.Repeat("#", noHashes));
-         string toFewHashes = string.Concat(Enumerable.Repeat("#", noHashes -1));
+         string toFewHashes = string.Concat(Enumerable.Repeat("#", noHashes - 1));
          return new KeyValuePair<string, bool>[]
          {
             new KeyValuePair<string,bool>($"{hashes} ", true),
@@ -61,8 +61,8 @@ namespace MarkdownToSiteGeneratorUnitTests
          var h = new HeaderSymbolParser(level);
          Assert.AreEqual(0, h.GetMatches("").Count());
       }
-      
-      
+
+
       [TestMethod]
       [DataRow((byte)1)]
       [DataRow((byte)2)]
@@ -81,7 +81,7 @@ This is my new site
 
          Assert.AreEqual(0, h.GetMatches(text).Count());
       }
-      
+
       [TestMethod]
       [DataRow((byte)1, "Level 1")]
       [DataRow((byte)2, "Level Two")]
@@ -102,7 +102,33 @@ This is my new site
 
          var round = h.GetMatches(text).ToList();
          Assert.AreEqual(1, round.Count);
-         Check(text, round, 0, string.Concat(Enumerable.Repeat('#', level)) + " ", contentExpected + Environment.NewLine);
+         Check(text, round, 0, string.Concat(Enumerable.Repeat('#', level)) + " ", contentExpected, Environment.NewLine);
+      }
+
+
+      [TestMethod]
+      [DataRow((byte)1, "Level 1")]
+      [DataRow((byte)2, "Level Two")]
+      public void GetMatches_OneToFind_AmongstParagraphs(byte level, string contentExpected)
+      {
+         var h = new HeaderSymbolParser(level);
+
+         string text =
+@"Some top paragraph text.
+
+# Level 1
+
+Some more paragraph text
+
+## Level Two
+
+Final paragraph text
+
+";
+         
+         var round = h.GetMatches(text).ToList();
+         Assert.AreEqual(1, round.Count);
+         Check(text, round, 0, string.Concat(Enumerable.Repeat('#', level)) + " ", contentExpected, Environment.NewLine);
       }
 
 
@@ -129,15 +155,19 @@ This is my new site
          var round = h.GetMatches(text).ToList();
          Assert.AreEqual(3, round.Count);
 
-         Check(text, round, 0, "## ", "Level Two" + Environment.NewLine);
-         Check(text, round, 1, "## ", "Subheading" + Environment.NewLine);
-         Check(text, round, 2, "## ", "Final one");
+         Check(text, round, 0, "## ", "Level Two", Environment.NewLine);
+         Check(text, round, 1, "## ", "Subheading", Environment.NewLine);
+         Check(text, round, 2, "## ", "Final one", string.Empty);
       }
-      static void Check(string text, List<SymbolLocation> round, int index, string expectedMarkup, string expectedContent)
+      static void Check(string text, List<SymbolLocation> round, int index, string expectedMarkup, string expectedContent, string expectedTail)
       {
          SymbolLocation found = round[index];
          Assert.AreEqual(expectedContent, found.ExtractContent(text).ToString());
-         Assert.AreEqual(expectedMarkup, found.ExtractMarkup(text).ToString());
+         Assert.AreEqual(expectedMarkup, found.ExtractMarkupHead(text).ToString());
+         Assert.AreEqual(expectedTail, found.ExtractMarkupTail(text).ToString());
+
+         Assert.AreEqual(found.MarkupLocation_Head.End, found.ContentLocation.Start);
+         Assert.AreEqual(found.ContentLocation.End, found.MarkupLocation_Tail.Start);
       }
    }
 }

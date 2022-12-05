@@ -4,7 +4,7 @@
    {
       public override IEnumerable<ISymbolisedText> Children => Enumerable.Empty<ISymbolisedText>();
 
-      public LiteralText(Range contentLocation) : base(new SymbolLocation(new Range(contentLocation.Start, contentLocation.Start), contentLocation))
+      public LiteralText(SimpleRange contentLocation) : base(new SymbolLocation(SimpleRange.Empty(contentLocation.Start), contentLocation, SimpleRange.Empty(contentLocation.End)))
       {
       }
 

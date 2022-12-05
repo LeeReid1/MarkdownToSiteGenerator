@@ -8,6 +8,7 @@
    {
       readonly MarkdownToSiteGenerator.Heading symbol;
       protected override string TagCode => $"h{symbol.Level}";
+      public byte Level => symbol.Level;
 
       public Heading(MarkdownToSiteGenerator.Heading symbol)
       {

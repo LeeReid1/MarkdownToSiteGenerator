@@ -8,21 +8,32 @@ namespace MarkdownToSiteGenerator
 {
    internal readonly struct SymbolLocation : IComparable<SymbolLocation>, IComparable
    {
-      public Range ContentLocation { get; }
-      public Range MarkupLocation { get; }
+      public SimpleRange ContentLocation { get; }
+      public SimpleRange MarkupLocation_Head { get; }
+      public SimpleRange MarkupLocation_Tail { get; }
 
-      public SymbolLocation(Range markupLocation, Range contentLocation)
+      public SymbolLocation(SimpleRange headMarkupLocation, SimpleRange contentLocation, SimpleRange tailMarkupLocation)
       {
-         MarkupLocation = markupLocation;
+         // Sanity check
+         if(tailMarkupLocation.Start != contentLocation.End)
+         {
+            throw new ArgumentException("The tail markup should touch the end of the content");
+         }
+
+         MarkupLocation_Head = headMarkupLocation;
          ContentLocation = contentLocation;
+         MarkupLocation_Tail= tailMarkupLocation;
+
+         
       }
 
       public ReadOnlySpan<char> ExtractContent(string source) => Extract(source, ContentLocation);
-      public ReadOnlySpan<char> ExtractMarkup(string source) => Extract(source, MarkupLocation);
-      private static ReadOnlySpan<char> Extract(string source, Range r) => source.AsSpan(r.Start.Value, r.End.Value - r.Start.Value);
+      public ReadOnlySpan<char> ExtractMarkupHead(string source) => Extract(source, MarkupLocation_Head);
+      public ReadOnlySpan<char> ExtractMarkupTail(string source) => Extract(source, MarkupLocation_Tail);
+      private static ReadOnlySpan<char> Extract(string source, SimpleRange r) => source.AsSpan(r.Start, r.Length);
 
-      public int CompareTo(SymbolLocation other) => ContentLocation.Start.Value.CompareTo(other.ContentLocation.Start.Value);
+      public int CompareTo(SymbolLocation other) => ContentLocation.Start.CompareTo(other.ContentLocation.Start);
 
-      int IComparable.CompareTo(object? obj) => obj is SymbolLocation sl ? ((IComparable<SymbolLocation>)this).CompareTo(sl) : -1;
+      int IComparable.CompareTo(object? obj) => obj is SymbolLocation sl ? ((IComparable<SymbolLocation>)this).CompareTo(sl) : 0;
    }
 }

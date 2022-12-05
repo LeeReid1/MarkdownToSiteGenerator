@@ -2,6 +2,9 @@
 
 namespace MarkdownToSiteGenerator.Markdown
 {
+   /// <summary>
+   /// Base class for markdown symbol parsers
+   /// </summary>
    internal abstract class MarkdownSymbolParser
    {
       protected abstract string RegexStr { get; }
@@ -13,38 +16,23 @@ namespace MarkdownToSiteGenerator.Markdown
 
       public bool MatchesLine(ReadOnlySpan<char> sourceSpan) => r.Value.IsMatch(sourceSpan);
       public IEnumerable<SymbolLocation> GetMatches(string source) => r.Value.Matches(source).Select(MatchToSymbolLocation);
-
-      private static SymbolLocation MatchToSymbolLocation(Match m) => new(new Range(m.Groups[1].Index, m.Groups[1].Index + m.Groups[1].Length), new Range(m.Groups[2].Index, m.Groups[2].Index + m.Groups[2].Length));
-
-
-   }
-
-   internal abstract class TopLevelObjectParser : MarkdownSymbolParser
-   {
-      public IEnumerable<SymbolisedText> ToSymbolisedText(string source)
+      public IEnumerable<SymbolLocation> GetMatches(string source, int from, int length)
       {
-         IEnumerable<SymbolLocation> matches = GetMatches(source);
-
-         foreach (var item in matches.Select(ToSymbolisedText))
+         Match m = r.Value.Match(source, from, length);
+         while (m.Success)
          {
-            ParseInternals(item);
-            yield return item;
+            yield return MatchToSymbolLocation(m);
+
+            m = m.NextMatch();
          }
       }
 
-      public abstract SymbolisedTextWithChildren ToSymbolisedText(SymbolLocation sl);
-
-
-      private void ParseInternals(SymbolisedTextWithChildren st)
+      private static SymbolLocation MatchToSymbolLocation(Match m)
       {
-         //// Trim the new line from the end for the literal text
-         //Range contentLoc = st.Location.ContentLocation;
+         return new(ToRange(m.Groups[1]), ToRange(m.Groups[2]), ToRange(m.Groups[3]));
 
-         //if (contentLoc.End.Value != contentLoc.Start.Value)
-         //{
-         //   contentLoc = new Range(contentLoc.Start, contentLoc.End.Value - 1);
-         //}
-         st.Items.Add(new LiteralText(st.Location.ContentLocation));
+         static SimpleRange ToRange(Group g) => new(g.Index, g.Index + g.Length);
       }
+
    }
 }
