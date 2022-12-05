@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownToSiteGenerator", "MarkdownToSiteGenerator\MarkdownToSiteGenerator.csproj", "{4BE360C9-9FD9-4E78-BA28-B0A850DAF05E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownToSiteGeneratorUnitTests", "MarkdownToSiteGeneratorUnitTests\MarkdownToSiteGeneratorUnitTests.csproj", "{A892D8A1-8DE3-4019-A7D5-BE29BD3BD5ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BE360C9-9FD9-4E78-BA28-B0A850DAF05E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE360C9-9FD9-4E78-BA28-B0A850DAF05E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BE360C9-9FD9-4E78-BA28-B0A850DAF05E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE360C9-9FD9-4E78-BA28-B0A850DAF05E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A892D8A1-8DE3-4019-A7D5-BE29BD3BD5ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A892D8A1-8DE3-4019-A7D5-BE29BD3BD5ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A892D8A1-8DE3-4019-A7D5-BE29BD3BD5ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A892D8A1-8DE3-4019-A7D5-BE29BD3BD5ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {93D2D253-4EBF-40CE-BE50-F4673EFB1F22}
+	EndGlobalSection
+EndGlobal
