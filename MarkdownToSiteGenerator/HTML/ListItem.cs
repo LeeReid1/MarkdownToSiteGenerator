@@ -7,10 +7,5 @@
    internal class ListItem : HtmlSymbol
    {
       protected override string TagCode => "li";
-
-
-      public ListItem(MarkdownToSiteGenerator.ListItem symbol)
-      {
-      }
    }
 }

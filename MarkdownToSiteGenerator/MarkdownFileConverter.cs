@@ -24,17 +24,17 @@ namespace MarkdownToSiteGenerator
          this.writer = writer;
       }
 
-      public async Task ConvertAndWriteHTML(TPathIn sourceLocation)
+      public async Task ConvertAndWriteHTML(TPathIn sourceLocation, TPathIn[] inMenu)
       {
          TPathOut destination = pathMapper.GetDestination(sourceLocation);
 
          string content = await sourceProvider.GetFileContent(sourceLocation);
 
-         ConvertAndWriteHTML(content, destination);
+         ConvertAndWriteHTML(content, destination, inMenu);
 
       }
 
-      public void ConvertAndWriteHTML(string content, TPathOut destination)
+      public void ConvertAndWriteHTML(string content, TPathOut destination, TPathIn[] inMenu)
       {
          if (writer.FileExists(destination))
          {
@@ -42,9 +42,9 @@ namespace MarkdownToSiteGenerator
          }
 
          var doc = parser.Parse(content);
-
+         string[]? menu = inMenu?.Select(pathMapper.GetURLLocation).ToArray();
          HTMLGenerator generator = new(content, doc);
-         StringBuilder sb = generator.Generate();
+         StringBuilder sb = generator.Generate(menu);
 
          writer.Write(sb, destination);
       }

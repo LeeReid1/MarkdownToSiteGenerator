@@ -38,9 +38,10 @@ namespace MarkdownToSiteGenerator
 
          
          MarkdownFileConverter<TPathIn,TPathOut> converter = new(pathMapper, sourceFileProvider, fileWriter);
-         foreach (TPathIn location in sourceFileProvider.GetFileLocations(true))
+         TPathIn[] fileLocationsIn = sourceFileProvider.GetFileLocations(true);
+         foreach (TPathIn location in fileLocationsIn)
          {
-            await converter.ConvertAndWriteHTML(location);
+            await converter.ConvertAndWriteHTML(location, fileLocationsIn);
          }
       }
 

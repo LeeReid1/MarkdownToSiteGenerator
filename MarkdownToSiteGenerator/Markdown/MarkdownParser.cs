@@ -4,6 +4,7 @@
    {
       readonly IReadOnlyList<TopLevelObjectParser> topLevelParsers = new List<TopLevelObjectParser>()
       {
+         new MetadataParser(),
          new HeaderSymbolParser(1),
          new HeaderSymbolParser(2),
          new HeaderSymbolParser(3),

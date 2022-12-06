@@ -5,7 +5,7 @@
       /// <summary>
       /// Parses an output location to a URL location
       /// </summary>
-      string GetURLLocation(TPathOut source);
+      string GetURLLocation(TPathIn source);
 
 
       /// <summary>
