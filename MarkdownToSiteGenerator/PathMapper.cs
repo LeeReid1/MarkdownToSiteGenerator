@@ -9,55 +9,72 @@ namespace MarkdownToSiteGenerator
    /// <summary>
    /// Maps from source to publish directories
    /// </summary>
-   internal class PathMapper
+   internal class PathMapper : IPathMapper<FilePath, FilePath>
    {
+      public static readonly string RelativeOutputPath_Images = "images" + Path.DirectorySeparatorChar;
+      public static readonly string RelativeOutputPath_CSS = "css" + Path.DirectorySeparatorChar;
+      public static readonly string RelativeOutputPath_JS = "js" + Path.DirectorySeparatorChar;
+
       /// <summary>
       /// Destination directory
       /// </summary>
-      public string Dir_DestinationTop { get; }
+      public FilePath Dir_DestinationTop { get; }
 
       /// <summary>
       /// Source directory
       /// </summary>
-      public string Dir_SourceTop { get; }
+      public FilePath Dir_SourceTop { get; }
 
       /// <summary>
       /// Image directory
       /// </summary>
-      public string Dir_Images => Path.Join(Dir_DestinationTop, "images");
+      public FilePath Dir_Images => Dir_DestinationTop + RelativeOutputPath_Images;
       /// <summary>
       /// Javascript directory
       /// </summary>
-      public string Dir_JS => Path.Join(Dir_DestinationTop, "js");
+      public FilePath Dir_JS => Dir_DestinationTop + RelativeOutputPath_JS;
       /// <summary>
       /// Stylesheets directory
       /// </summary>
-      public string Dir_CSS => Path.Join(Dir_DestinationTop, "css");
+      public FilePath Dir_CSS => Dir_DestinationTop + RelativeOutputPath_CSS;
 
-      public PathMapper(string sourceTop, string destinationTop)
+      public PathMapper(FilePath sourceTop, FilePath destinationTop)
       {
-         this.Dir_SourceTop = Path.GetFullPath(sourceTop);
-         this.Dir_DestinationTop = Path.GetFullPath(destinationTop);
+         if (!sourceTop.IsDirectory)
+         {
+            throw new ArgumentException($"{nameof(sourceTop)} must explicitly be a directory (end with {Path.DirectorySeparatorChar})");
+         }
+         if (!destinationTop.IsDirectory)
+         {
+            throw new ArgumentException($"{nameof(destinationTop)} must explicitly be a directory (end with {Path.DirectorySeparatorChar})");
+         }
+         this.Dir_SourceTop = sourceTop.ToAbsolute();
+         this.Dir_DestinationTop = destinationTop.ToAbsolute();
       }
 
-      public string GetDestination(string source)
+      public FilePath GetDestination(FilePath source)
       {
-         string relativePath = Path.GetFullPath(source).Substring(Dir_SourceTop.Length).Replace(" ","-");
+         string relativePath = source.ToRelative(Dir_SourceTop).ToString().Replace(" ","-");
          string filenameWithoutExtension = Path.GetFileNameWithoutExtension(relativePath);
          string extension = Path.GetExtension(relativePath);
+         string filenameWithExtension = filenameWithoutExtension + extension;
          return extension.ToLowerInvariant() switch
          {
-            ".md" or ".txt" => Path.Join(Dir_DestinationTop, filenameWithoutExtension + ".html"),
-            ".jpeg" or ".png" or ".bmp" or ".webp" => Path.Join(Dir_Images, filenameWithoutExtension + extension),
-            ".css" or ".less" => Path.Join(Dir_CSS, Path.GetFileName(relativePath)),
+            ".md" or ".html" or ".htm"                       => Dir_DestinationTop + (relativePath[..^extension.Length] + ".html"), // maintain folder structure
+            ".jpg" or ".jpeg" or ".png" or ".bmp" or ".webp" => Dir_Images + filenameWithExtension, // move all to same folder
+            ".css" or ".less"                                => Dir_CSS + filenameWithExtension, // move all to same folder
+            ".js"                                            => Dir_JS + filenameWithExtension, // move all to same folder
             _ => throw new NotSupportedException(extension)
          };
+
       }
 
-      public static bool SuffixIsMarkdown(string path)
-      {
-         string suffix = Path.GetExtension(path);
-         return suffix == ".md" || suffix == ".txt";
-      }
+
+      public string GetURLLocation(FilePath source) => GetDestination(source).
+                                                       ToRelative(Dir_DestinationTop).
+                                                       ToString().
+                                                       Replace('\\', '/');
+
+      public FilePath ParsePathIn(string source) => new(Path.GetFullPath(source));
    }
 }

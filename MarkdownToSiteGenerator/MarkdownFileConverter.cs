@@ -8,34 +8,45 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
-   internal class MarkdownFileConverter
+   internal class MarkdownFileConverter<TPathIn, TPathOut>
    {
-      readonly PathMapper pathMapper;
-      readonly  MarkdownParser parser = new();
-      
-      public MarkdownFileConverter(PathMapper pathMapper)
+      readonly ISourceFileProvider<TPathIn> sourceProvider;
+      readonly IFileWriter<TPathOut> writer;
+      readonly IPathMapper<TPathIn, TPathOut> pathMapper;
+      readonly MarkdownParser parser = new();
+
+      public MarkdownFileConverter(IPathMapper<TPathIn, TPathOut> pathMapper, 
+                                   ISourceFileProvider<TPathIn> sourceProvider, 
+                                   IFileWriter<TPathOut> writer)
       {
          this.pathMapper = pathMapper;
+         this.sourceProvider = sourceProvider;
+         this.writer = writer;
       }
 
-      public void ConvertAndWriteHTML(string sourceLocation)
+      public async Task ConvertAndWriteHTML(TPathIn sourceLocation)
       {
-         string destination = pathMapper.GetDestination(sourceLocation);
-         if(File.Exists(destination))
+         TPathOut destination = pathMapper.GetDestination(sourceLocation);
+
+         string content = await sourceProvider.GetFileContent(sourceLocation);
+
+         ConvertAndWriteHTML(content, destination);
+
+      }
+
+      public void ConvertAndWriteHTML(string content, TPathOut destination)
+      {
+         if (writer.FileExists(destination))
          {
             throw new Exception("File already exists at destination");
          }
-         string content = File.ReadAllText(sourceLocation);
 
          var doc = parser.Parse(content);
 
-         HTMLGenerator generator = new HTMLGenerator(content, doc);
+         HTMLGenerator generator = new(content, doc);
+         StringBuilder sb = generator.Generate();
 
-         Directory.CreateDirectory(Path.GetDirectoryName(destination) ?? throw new NullReferenceException(nameof(destination)));
-
-
-         using StreamWriter stream= new(destination,false,Encoding.UTF8,128000);
-         stream.WriteAsync(generator.Generate());
+         writer.Write(sb, destination);
       }
    }
 }
