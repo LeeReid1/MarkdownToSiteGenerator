@@ -6,7 +6,7 @@
    internal abstract class TopLevelObjectParser : MarkdownSymbolParser
    {
       public IEnumerable<SymbolisedTextWithChildren> ToSymbolisedText(string source) => ToSymbolisedText(source, 0, source.Length);
-      public IEnumerable<SymbolisedTextWithChildren> ToSymbolisedText(string source, int from, int length) => GetMatches(source, from, length).Select(ToSymbolisedText).ForEach(ParseInternals);
+      public IEnumerable<SymbolisedTextWithChildren> ToSymbolisedText(string source, int from, int length) => GetMatches(source, from, length).Select(ToSymbolisedText).ForEachIterable(ParseInternals);
 
       public abstract SymbolisedTextWithChildren ToSymbolisedText(SymbolLocation sl);
 

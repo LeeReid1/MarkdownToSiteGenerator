@@ -1,47 +1,61 @@
 ﻿using MarkdownToSiteGenerator;
 
-//if (args.Length != 2)
-//{
-//   Console.WriteLine("Please provide two arguments: a directory to read from, and a directory to write to");
-//}
-
-
-
-
-string dir_from = "C:\\Users\\leere\\Downloads\\temp\\markdown-test\\source";// args[0];
-string dir_to = "C:\\Users\\leere\\Downloads\\temp\\markdown-test\\destination";// args[1];
-
-SiteGenerator_FolderToFolder sg = new(dir_from, dir_to);
-
-FilePath[] toBeOverwritten = sg.GetWillBeOverwritten().ToArray();
-
-if (toBeOverwritten.Length != 0)
+internal class Program
 {
-   Console.WriteLine("--------");
-   toBeOverwritten.ForEach(Console.WriteLine);
-   Console.WriteLine("The above files will be deleted and regenerated. Continue? (y or n)");
-   while(true)
+   private static async Task<int> Main(string[] args)
    {
-      var pressed = Console.ReadKey(true);
-      if(pressed.KeyChar == 'y')
+      if (args.Length != 2)
       {
-         break;
+         Console.WriteLine("Please provide two arguments: a directory to read from, and a directory to write to");
       }
-      else if(pressed.KeyChar == 'n')
+
+      string dir_from = CleanInput(args[0]);
+      string dir_to = CleanInput(args[1]);
+
+      SiteGenerator_FolderToFolder sg = new(dir_from, dir_to);
+
+      if (sg.GetOutputFileLocations().ContainsDuplicates())
       {
-         return;
+         Console.WriteLine("Two or more files will be saved to the same location. Ensure all style, js, and image files have distinct file names, and that no source files have the same path but different extension");
+         return -1;
       }
+
+      FilePath[] toBeOverwritten = sg.GetWillBeOverwritten().ToArray();
+
+      if (toBeOverwritten.Length != 0)
+      {
+         Console.WriteLine("--------");
+         toBeOverwritten.ForEach(Console.WriteLine);
+         Console.WriteLine("The above files will be deleted and regenerated. Continue? (y or n)");
+         while (true)
+         {
+            var pressed = Console.ReadKey(true);
+            if (pressed.KeyChar == 'y')
+            {
+               break;
+            }
+            else if (pressed.KeyChar == 'n')
+            {
+               return -1;
+            }
+         }
+
+         sg.DeleteDestinationFiles();
+      }
+
+      await sg.Generate();
+
+      Console.WriteLine("Done");
+      return 0;
    }
 
-   sg.DeleteDestinationFiles();
+   private static string CleanInput(string input)
+   {
+      if (!(input.EndsWith(Path.PathSeparator) || input.EndsWith(Path.AltDirectorySeparatorChar)))
+      {
+         input += Path.DirectorySeparatorChar;
+      }
+    
+      return Path.GetFullPath(input);  
+   }
 }
-
-await sg.Generate();
-
-//MarkdownFileConverter<string,string> markdownConverter = new(pathMap);
-
-//foreach(string dir_src in allFiles.Where(PathMapper.SuffixIsMarkdown))
-//{
-//   markdownConverter.ConvertAndWriteHTML(dir_src);
-//}
-

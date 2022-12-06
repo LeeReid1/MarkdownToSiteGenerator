@@ -10,14 +10,25 @@ namespace MarkdownToSiteGenerator
    public static class CollectionExtensions
    {
       /// <summary>
-      /// Performs the action on each item provided and returns the original ienumerable
+      /// Performs the action on each item provided when the return value is iterated over
       /// </summary>
-      public static IEnumerable<T> ForEach<T>(this IEnumerable<T> ienum, Action<T> act)
+      public static IEnumerable<T> ForEachIterable<T>(this IEnumerable<T> ienum, Action<T> act)
       {
          foreach (var item in ienum)
          {
             act(item);
             yield return item;
+         }
+      }
+      
+      /// <summary>
+      /// Performs the action on each item provided
+      /// </summary>
+      public static void ForEach<T>(this IEnumerable<T> ienum, Action<T> act)
+      {
+         foreach (var item in ienum)
+         {
+            act(item);
          }
       }
 
@@ -44,6 +55,15 @@ namespace MarkdownToSiteGenerator
             }
             index++;
          }
+      }
+
+      /// <summary>
+      /// Returns true if this contains duplicates
+      /// </summary>
+      public static bool ContainsDuplicates<T>(this IEnumerable<T> items)
+      {
+         HashSet<T> set = new();
+         return items.Any(a=>!set.Add(a));
       }
 
       public static IEnumerable<IEnumerable<T>> Split<T>(this IList<T> list, Func<T, int, bool> splitHere)

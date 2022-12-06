@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MarkdownToSiteGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "../../../../Example_Input/ ../../../../Example_Output/"
+    }
+  }
+}
