@@ -11,13 +11,13 @@ namespace MarkdownToSiteGenerator
       public void Delete(FilePath path) => File.Delete(path.ToAbsoluteString());
 
       public bool FileExists(FilePath path) => File.Exists(path.ToString());
-      public void Write(StringBuilder content, FilePath destination)
+      public async Task Write(StringBuilder content, FilePath destination)
       {
          string dest = destination.ToAbsoluteString();
          Directory.CreateDirectory(Path.GetDirectoryName(dest) ?? throw new NullReferenceException(nameof(destination)));
 
          using StreamWriter stream = new(dest, false, Encoding.UTF8, 128000);
-         stream.WriteAsync(content);
+         await stream.WriteAsync(content);
       }
    }
 }

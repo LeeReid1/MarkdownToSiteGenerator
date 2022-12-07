@@ -1,3 +1,5 @@
+title: Second Page
+
 # Some Heading
 
 This is some text, and here's a list:

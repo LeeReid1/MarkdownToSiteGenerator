@@ -35,7 +35,5 @@ namespace MarkdownToSiteGeneratorUnitTests
             return input.Parts[^1] == "test-output2.md";
          }
       }
-
-
    }
 }

@@ -24,29 +24,28 @@ namespace MarkdownToSiteGenerator
          this.writer = writer;
       }
 
-      public async Task ConvertAndWriteHTML(TPathIn sourceLocation, TPathIn[] inMenu)
+      public async Task ConvertAndWriteHTML(SymbolisedDocument doc, TPathIn sourceLocation, ICollection<(TPathIn sourceLocation, string title)>? inMenu)
       {
          TPathOut destination = pathMapper.GetDestination(sourceLocation);
-
-         string content = await sourceProvider.GetFileContent(sourceLocation);
-
-         ConvertAndWriteHTML(content, destination, inMenu);
-
-      }
-
-      public void ConvertAndWriteHTML(string content, TPathOut destination, TPathIn[] inMenu)
-      {
          if (writer.FileExists(destination))
          {
             throw new Exception("File already exists at destination");
          }
-
-         var doc = parser.Parse(content);
-         string[]? menu = inMenu?.Select(pathMapper.GetURLLocation).ToArray();
-         HTMLGenerator generator = new(content, doc);
+         
+         var menu = inMenu?.Select(a=>(pathMapper.GetURLLocation(a.sourceLocation), a.title)).ToArray();
+         HTMLGenerator generator = new(doc);
          StringBuilder sb = generator.Generate(menu);
 
-         writer.Write(sb, destination);
+         await writer.Write(sb, destination);
+      }
+
+
+
+      internal async Task<SymbolisedDocument> Parse(TPathIn sourceLocation)
+      {
+         string content = await sourceProvider.GetFileContent(sourceLocation);
+         var doc = parser.Parse(content);
+         return doc;
       }
    }
 }

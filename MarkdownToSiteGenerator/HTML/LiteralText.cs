@@ -11,6 +11,8 @@ namespace MarkdownToSiteGenerator.HTML
 
       readonly string contentSource;
       readonly SimpleRange range;
+
+      public LiteralText(string text) : this(text, new SimpleRange(0, text.Length)) { }
       public LiteralText(string contentSource, SimpleRange range)
       {
          this.contentSource = contentSource;

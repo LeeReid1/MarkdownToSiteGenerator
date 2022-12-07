@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
-   public class FilePath : GenericPath<string>, IPath
+   public class FilePath : GenericPath<string>
    {
       public bool IsDirectory => Parts[^1] == string.Empty;
       public bool IsFile => !IsDirectory;
 
       public FilePath(IEnumerable<string> parts) : base(parts) { }
-      public FilePath(string path):base(path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+      public FilePath(string path) : base(path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
       {
       }
 
-      public static implicit operator FilePath(string path)=> new FilePath(path);
-      public static implicit operator FilePath(char path)=> new FilePath(path.ToString());
-      public static FilePath operator +(FilePath left, FilePath right) => left.IsDirectory ? new FilePath(left.Parts.Take(left.Parts.Count-1).Concat(right.Parts)) :  throw new ArgumentException("The left file path is not a directory");
+      public static implicit operator FilePath(string path) => new(path);
+      public static implicit operator FilePath(char path) => new(path.ToString());
+      public static FilePath operator +(FilePath left, FilePath right) => left.IsDirectory ? new FilePath(left.Parts.Take(left.Parts.Count - 1).Concat(right.Parts)) : throw new ArgumentException("The left file path is not a directory");
 
       /// <summary>
       /// Converts this into a legal path string
@@ -30,14 +30,14 @@ namespace MarkdownToSiteGenerator
 
       public FilePath ToRelative(FilePath relativeTo)
       {
-         if(!relativeTo.IsDirectory)
+         if (!relativeTo.IsDirectory)
          {
             throw new ArgumentException("relative to is a file");
          }
          var relativeToParts = relativeTo.ToAbsolute().Parts.ToArray()[..^1];
          var asAbs = this.ToAbsolute();
 
-         if(!relativeToParts.SequenceEqual(asAbs.Parts.Take(relativeToParts.Length)))
+         if (!relativeToParts.SequenceEqual(asAbs.Parts.Take(relativeToParts.Length)))
          {
             throw new ArgumentException("Arguments do not share a common path");
          }
@@ -45,6 +45,11 @@ namespace MarkdownToSiteGenerator
          return new FilePath(asAbs.Parts.Skip(relativeToParts.Length));
       }
 
-
+      public string ToURLFormat_RelativeToRoot(FilePath rootDirectory)
+      {
+         FilePath fp = ToRelative(rootDirectory);
+ 
+         return "/" + string.Join("/", fp.Parts).Replace(" ", "%20");
+      }
    }
 }

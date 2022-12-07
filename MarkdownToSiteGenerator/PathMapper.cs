@@ -70,10 +70,7 @@ namespace MarkdownToSiteGenerator
       }
 
 
-      public string GetURLLocation(FilePath source) => GetDestination(source).
-                                                       ToRelative(Dir_DestinationTop).
-                                                       ToString().
-                                                       Replace('\\', '/');
+      public string GetURLLocation(FilePath source) => GetDestination(source).ToURLFormat_RelativeToRoot(Dir_DestinationTop);
 
       public FilePath ParsePathIn(string source) => new(Path.GetFullPath(source));
    }

@@ -6,6 +6,6 @@ namespace MarkdownToSiteGenerator
    {
       bool FileExists(TPathOut path);
       void Delete(TPathOut path);
-      void Write(StringBuilder content, TPathOut destination);
+      Task Write(StringBuilder content, TPathOut destination);
    }
 }

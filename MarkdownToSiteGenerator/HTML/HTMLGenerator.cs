@@ -10,29 +10,27 @@ namespace MarkdownToSiteGenerator.HTML
 {
    internal class HTMLGenerator
    {
-      readonly string source;
       readonly SymbolisedDocument doc;
 
       public bool IncludeBootstrap { get; set; } = true;
-      public HTMLGenerator(string source, SymbolisedDocument doc)
+      public HTMLGenerator(SymbolisedDocument doc)
       {
-         this.source = source;
          this.doc = doc;
       }
 
-      public StringBuilder Generate(ICollection<string>? urlsInNavBar = null)
+      public StringBuilder Generate(ICollection<(string url, string title)>? itemsInNavBar = null)
       {
-         HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, source);
+         HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, doc.Source);
          if (IncludeBootstrap)
          {
             htmlDoc.AddToHeader("<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65\" crossorigin=\"anonymous\">");
             htmlDoc.AddToHeader("<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4\" crossorigin=\"anonymous\"></script>");
          }
 
-         if (urlsInNavBar != null)
+         if (itemsInNavBar != null)
          {
             Navbar navbar = new();
-            urlsInNavBar.Select(url => new Link() { HRef = url }).ForEach(navbar.Add);
+            itemsInNavBar.Select(cur => new Link(cur.url, cur.title)).ForEach(navbar.Add);
             htmlDoc.Insert(0, navbar);
          }
 

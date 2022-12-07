@@ -54,6 +54,40 @@ namespace MarkdownToSiteGeneratorUnitTests
 
 
       [TestMethod]
+      public void ToURLFormat_RelativeToRoot_Dir()
+      {
+         string root = $"{Environment.CurrentDirectory}{Path.DirectorySeparatorChar}abc{Path.DirectorySeparatorChar}";
+         string other = root + $"def{Path.DirectorySeparatorChar}";
+         FilePath fp = new(root);
+         FilePath fp2 = new(other);
+
+         Assert.AreEqual($"/def/", fp2.ToURLFormat_RelativeToRoot(fp).ToString());
+      }
+
+      [TestMethod]
+      public void ToURLFormat_RelativeToRoot_FileAtRoot()
+      {
+         string root = $"{Environment.CurrentDirectory}{Path.DirectorySeparatorChar}abc{Path.DirectorySeparatorChar}";
+         string other = root + $"file name.txt";
+         FilePath fp = new(root);
+         FilePath fp2 = new(other);
+
+         Assert.AreEqual($"/file%20name.txt", fp2.ToURLFormat_RelativeToRoot(fp).ToString());
+      }
+      [TestMethod]
+      public void ToURLFormat_RelativeToRoot_FileHigher()
+      {
+         string root = $"{Environment.CurrentDirectory}{Path.DirectorySeparatorChar}abc{Path.DirectorySeparatorChar}";
+         string other = root + $"def{Path.DirectorySeparatorChar}file name.txt";
+         FilePath fp = new(root);
+         FilePath fp2 = new(other);
+
+         Assert.AreEqual($"/def/file%20name.txt", fp2.ToURLFormat_RelativeToRoot(fp).ToString());
+
+      }
+
+
+      [TestMethod]
       public void ToRelative_SameRoot()
       {
          string root = $"{Environment.CurrentDirectory}{Path.DirectorySeparatorChar}abc{Path.DirectorySeparatorChar}";

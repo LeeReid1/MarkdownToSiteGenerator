@@ -13,6 +13,30 @@ namespace MarkdownToSiteGeneratorUnitTests
    public class CollectionExtensionsTests
    {
       [TestMethod]
+      public void FirstOrNull_Empty()
+      {
+         Assert.IsNull(Enumerable.Empty<int>().FirstOrNull(a=>a==9));
+      }
+      
+      [TestMethod]
+      public void FirstOrNull_None()
+      {
+         Assert.IsNull(new int[] { 1, 2, 11 }.FirstOrNull(a=>a==9));
+      }
+      
+
+      [TestMethod]
+      public void FirstOrNull_One()
+      {
+         Assert.AreEqual(9, new int[] { 1, 2, 9, 11 }.FirstOrNull(a=>a%3 == 0));
+      }
+      [TestMethod]
+      public void FirstOrNull_Multiple()
+      {
+         Assert.AreEqual(9, new int[] { 1, 2, 9, 12, 15 }.FirstOrNull(a => a % 3 == 0));
+      }
+      
+      [TestMethod]
       public void IndexOfAll_Empty()
       {
          Assert.AreEqual(0, Enumerable.Empty<object>().IndexOfAll(a => true).Count());

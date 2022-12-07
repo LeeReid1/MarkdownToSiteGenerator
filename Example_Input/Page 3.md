@@ -1,3 +1,5 @@
+title: Some Heading
+
 # Some Heading
 
 This is some text, and here's a list:

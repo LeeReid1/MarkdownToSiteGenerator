@@ -21,6 +21,19 @@ namespace MarkdownToSiteGenerator
          }
       }
       
+      public static T? FirstOrNull<T>(this IEnumerable<T> ienum, Func<T, bool> filter) where T:struct
+      {
+         foreach (var item in ienum)
+         {
+            if(filter(item))
+            {
+               return item;
+            }
+         }
+         return null;
+      }
+
+
       /// <summary>
       /// Performs the action on each item provided
       /// </summary>
