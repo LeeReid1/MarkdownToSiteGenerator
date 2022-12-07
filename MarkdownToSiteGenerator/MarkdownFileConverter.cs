@@ -24,7 +24,7 @@ namespace MarkdownToSiteGenerator
          this.writer = writer;
       }
 
-      public async Task ConvertAndWriteHTML(SymbolisedDocument doc, TPathIn sourceLocation, ICollection<(TPathIn sourceLocation, string title)>? inMenu)
+      public async Task ConvertAndWriteHTML(SymbolisedDocument doc, TPathIn sourceLocation, ICollection<(TPathIn sourceLocation, string title)>? inMenu, Configuration config)
       {
          TPathOut destination = pathMapper.GetDestination(sourceLocation);
          if (writer.FileExists(destination))
@@ -33,7 +33,7 @@ namespace MarkdownToSiteGenerator
          }
          
          var menu = inMenu?.Select(a=>(pathMapper.GetURLLocation(a.sourceLocation), a.title)).ToArray();
-         HTMLGenerator generator = new(doc);
+         HTMLGenerator generator = new(doc, config);
          StringBuilder sb = generator.Generate(menu);
 
          await writer.Write(sb, destination);

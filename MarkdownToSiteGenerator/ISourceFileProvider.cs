@@ -1,4 +1,6 @@
-﻿namespace MarkdownToSiteGenerator
+﻿using Microsoft.Extensions.Configuration;
+
+namespace MarkdownToSiteGenerator
 {
    public interface ISourceFileProvider<TPath>
    {
@@ -15,5 +17,10 @@
       //Dictionary<string, string> GetUniversalMetadata();
 
       Task<string> GetFileContent(TPath path);
+
+      /// <summary>
+      /// Provides contents of a INI configuration file found with the documents. If none exists, it returns null
+      /// </summary>
+      Task<string?> GetConfigurationFileContent();
    }
 }

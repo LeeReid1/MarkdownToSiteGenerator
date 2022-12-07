@@ -11,19 +11,24 @@ namespace MarkdownToSiteGenerator.HTML
    internal class HTMLGenerator
    {
       readonly SymbolisedDocument doc;
+      readonly Configuration config;
 
-      public bool IncludeBootstrap { get; set; } = true;
-      public HTMLGenerator(SymbolisedDocument doc)
+
+      public HTMLGenerator(SymbolisedDocument doc, Configuration config)
       {
          this.doc = doc;
+         this.config = config;
       }
 
       public StringBuilder Generate(ICollection<(string url, string title)>? itemsInNavBar = null)
       {
          HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, doc.Source);
-         if (IncludeBootstrap)
+         if (config.IncludeBootstrap_CSS)
          {
             htmlDoc.AddToHeader("<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65\" crossorigin=\"anonymous\">");
+         }
+         if(config.IncludeBootstrap_JS)
+         { 
             htmlDoc.AddToHeader("<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4\" crossorigin=\"anonymous\"></script>");
          }
 

@@ -24,6 +24,10 @@ You can see an example website in the Example_Input and Example_Output folders.
 
 Directories can be nested as deep as you would like and will reflect the final site structure. Spaces in paths are converted to hyphens in the HTML site. The output directory must not be within the input directory, and vice versa.
 
+### Settings
+
+You can optionally include a config.ini file in the top directory of your input to change how the site is generated. See the examples folder for relevant settings.
+
 ## Metadata
 
 Add metadata to MD documents like so (including the blank line):

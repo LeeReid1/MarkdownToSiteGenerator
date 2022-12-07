@@ -41,12 +41,14 @@ namespace MarkdownToSiteGenerator
       }
       public async Task Generate()
       {
+         Configuration config =  Configuration.IniToConfiguration(await sourceFileProvider.GetConfigurationFileContent());
+
          List<(TPathIn location, SymbolisedDocument doc)> docs = await ParseAllInputs().ToListAsync();
          List<(TPathIn location, string title)> withTitle = GetMenuItemPaths(docs);
 
          foreach ((TPathIn location, SymbolisedDocument doc) in docs)
          {
-            await converter.ConvertAndWriteHTML(doc, location, withTitle);
+            await converter.ConvertAndWriteHTML(doc, location, withTitle, config);
          }
       }
 
@@ -60,22 +62,5 @@ namespace MarkdownToSiteGenerator
       }
 
       internal void DeleteDestinationFiles() => GetOutputFileLocations().ForEach(fileWriter.Delete);
-   }
-
-   /// <summary>
-   /// A site generator that reads from and writes to the file system
-   /// </summary>
-   public class SiteGenerator_FolderToFolder : SiteGenerator<FilePath, FilePath>
-   {
-      public SiteGenerator_FolderToFolder(string dir_from, string dir_to) : base(new FileSourceProvider(dir_from), new PathMapper(dir_from, dir_to), new FileWriter())
-      {
-         FilePath fpFrom = dir_from;
-         FilePath fpTo = dir_to;
-
-         if(fpFrom.Equals(fpTo))
-         {
-            throw new ArgumentException("Read and write locations cannot be the same");
-         }
-      }
    }
 }
