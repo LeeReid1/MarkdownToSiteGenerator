@@ -13,22 +13,23 @@ namespace MarkdownToSiteGenerator
    /// Represents a tree, or path thereof, with no full-path duplicates
    /// </summary>
    /// <typeparam name="T">The value held at each leaf or branch point</typeparam>
-   public class UniqueTreeNode<T> : IEnumerable<GenericPath<T>> where T : IEquatable<T>, IComparable<T>, IComparable
+   public class UniqueTreeNode<T,TTag> : IEnumerable<GenericPath<T>> where T : IEquatable<T>, IComparable<T>, IComparable
    {
-      public List<UniqueTreeNode<T>> Children { get; } = new List<UniqueTreeNode<T>>();
+      public List<UniqueTreeNode<T, TTag>> Children { get; } = new();
       public T Value { get; }
+      public TTag? Tag { get; set; }
 
       public UniqueTreeNode(T value) { Value = value; }
 
-      public UniqueTreeNode<T> AddValueByPath(IEnumerable<T> path)
+      public UniqueTreeNode<T, TTag> AddValueByPath(IEnumerable<T> path)
       {
-         UniqueTreeNode<T> final = this;
+         UniqueTreeNode<T, TTag> final = this;
 
-         var enumerator = path.GetEnumerator();
+         var enumer = path.GetEnumerator();
 
-         return Sub(this, enumerator);
+         return Sub(this, enumer);
 
-         static UniqueTreeNode<T> Sub(UniqueTreeNode<T> node, IEnumerator<T> enumerator)
+         static UniqueTreeNode<T, TTag> Sub(UniqueTreeNode<T, TTag> node, IEnumerator<T> enumerator)
          {
             if (!enumerator.MoveNext())
             {
@@ -49,16 +50,20 @@ namespace MarkdownToSiteGenerator
          }
       }
 
-      private UniqueTreeNode<T> AddChildPath(IEnumerator<T> path)
+      private UniqueTreeNode<T, TTag> AddChildPath(IEnumerator<T> path)
       {
-         UniqueTreeNode<T> next = new(path.Current);
+         UniqueTreeNode<T, TTag> deepest;
+         UniqueTreeNode<T, TTag> next = new(path.Current);
          if (path.MoveNext())
          {
-            next.AddChildPath(path);
+            deepest = next.AddChildPath(path);
+         }
+         else
+         {
+            deepest = next;
          }
          Children.Add(next);
-         return next;
-
+         return deepest;
       }
 
       public IEnumerable<GenericPath<T>> AsEnumerable()
@@ -66,7 +71,7 @@ namespace MarkdownToSiteGenerator
          List<T> path = new();
          return Sub(this, path);
 
-         static IEnumerable<GenericPath<T>> Sub(UniqueTreeNode<T> node, List<T> prepend)
+         static IEnumerable<GenericPath<T>> Sub(UniqueTreeNode<T, TTag> node, List<T> prepend)
          {
             prepend = new List<T>(prepend)
             {

@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Ini;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +11,36 @@ namespace MarkdownToSiteGenerator
    {
       public const string Key_IncludeBootstrap_JS = "include_bootstrap_js";
       public const string Key_IncludeBootstrap_CSS = "include_bootstrap_css";
+      public const string Key_CreateSiteMaps = "create_sitemaps";
+      public const string Key_DestinationDomain = "destination_domain";
 
       public bool IncludeBootstrap_JS { get; set; }
       public bool IncludeBootstrap_CSS { get; set; }
+      public bool CreateSiteMaps { get; set; }
+
+      string? _destinationDomain;
+      /// <summary>
+      /// Guaranteed null or ending in /
+      /// </summary>
+      public string? DestinationDomain
+      {
+         get => _destinationDomain; 
+         set
+         {
+            if(value == null)
+            {
+               _destinationDomain = null;
+            }
+            else if(value.EndsWith("/"))
+            {
+               _destinationDomain = value;
+            }
+            else
+            {
+               _destinationDomain = value + "/";
+            }
+         }
+      }
 
       public static Configuration IniToConfiguration(string? iniContent)
       {
@@ -34,7 +58,9 @@ namespace MarkdownToSiteGenerator
          return new Configuration()
          {
             IncludeBootstrap_JS = ParseBool(Key_IncludeBootstrap_JS, true),
-            IncludeBootstrap_CSS = ParseBool(Key_IncludeBootstrap_CSS, true)
+            IncludeBootstrap_CSS = ParseBool(Key_IncludeBootstrap_CSS, true),
+            CreateSiteMaps = ParseBool(Key_CreateSiteMaps, true),
+            DestinationDomain = cr?[Key_DestinationDomain]
          };
 
 

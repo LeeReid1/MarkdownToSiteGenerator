@@ -12,6 +12,14 @@ namespace MarkdownToSiteGeneratorUnitTests
    public class ConfigurationTests
    {
       [TestMethod]
+      public void IniToConfiguration_Empty()
+      {
+         string content = $"";
+         Configuration config = Configuration.IniToConfiguration(content);
+         Assert.IsNotNull(config);
+      }
+      
+      [TestMethod]
       [DataRow(true)]
       [DataRow(false)]
       public void IniToConfiguration_JS(bool js)
@@ -31,6 +39,29 @@ namespace MarkdownToSiteGeneratorUnitTests
          Configuration config = Configuration.IniToConfiguration(content);
          
          Assert.AreEqual(val, config.IncludeBootstrap_CSS);
+      }
+      
+      [TestMethod]
+      [DataRow(true)]
+      [DataRow(false)]
+      public void IniToConfiguration_SiteMaps(bool val)
+      {
+         string content = $"{Configuration.Key_CreateSiteMaps}={val}";
+         Configuration config = Configuration.IniToConfiguration(content);
+         
+         Assert.AreEqual(val, config.CreateSiteMaps);
+      }
+      
+
+      [TestMethod]
+      [DataRow("https://example.com", "https://example.com/")]
+      [DataRow("https://example.com/", "https://example.com/")]
+      public void IniToConfiguration_DestinationDomain(string setting, string expected)
+      {
+         string content = $"{Configuration.Key_DestinationDomain}={setting}";
+         Configuration config = Configuration.IniToConfiguration(content);
+         
+         Assert.AreEqual(expected, config.DestinationDomain);
       }
    }
 }

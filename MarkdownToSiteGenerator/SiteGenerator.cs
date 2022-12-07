@@ -41,18 +41,47 @@ namespace MarkdownToSiteGenerator
       }
       public async Task Generate()
       {
-         Configuration config =  Configuration.IniToConfiguration(await sourceFileProvider.GetConfigurationFileContent());
+         Configuration config = Configuration.IniToConfiguration(await sourceFileProvider.GetConfigurationFileContent());
 
          List<(TPathIn location, SymbolisedDocument doc)> docs = await ParseAllInputs().ToListAsync();
-         List<(TPathIn location, string title)> withTitle = GetMenuItemPaths(docs);
+         List<(TPathIn location, string title)> withTitle = GetTitles(docs);
 
          foreach ((TPathIn location, SymbolisedDocument doc) in docs)
          {
             await converter.ConvertAndWriteHTML(doc, location, withTitle, config);
          }
+
+         await GenerateSiteMapIfConfigAllows(config, withTitle);
       }
 
-      private static List<(TPathIn location, string title)> GetMenuItemPaths(List<(TPathIn location, SymbolisedDocument doc)> docs)
+      private async Task GenerateSiteMapIfConfigAllows(Configuration config, IEnumerable<(TPathIn path, string title)> locations)
+      {
+         if (config.CreateSiteMaps)
+         {
+            if (config.DestinationDomain != null)
+            {
+               await WriteSiteMap_XML(config.DestinationDomain, locations.Select(a=>a.path));
+            }
+
+            await WriteHTMLDocument(config, locations);
+         }
+      }
+
+      private async Task WriteSiteMap_XML(string domain, IEnumerable<TPathIn> locations)
+      {
+         StringBuilder map = SiteMapGenerator.WriteXMLMap(domain, locations.Select(pathMapper.GetURLLocation));
+         await fileWriter.Write(map, pathMapper.GetDestination_Sitemap_XML());
+      }
+
+      private async Task WriteHTMLDocument(Configuration config, IEnumerable<(TPathIn path, string title)> locations)
+      {
+         HtmlDocument doc = SiteMapGenerator.CreateHTMLMap(locations.Select(a => ( new FilePath(pathMapper.GetURLLocation(a.path)), a.title)).ToList());
+         HTMLGenerator.AddOptionalsToDoc(config, null, doc);
+         StringBuilder map = doc.Write(new StringBuilder());
+         await fileWriter.Write(map, pathMapper.GetDestination_Sitemap_HTML());
+      }
+
+      private static List<(TPathIn location, string title)> GetTitles(List<(TPathIn location, SymbolisedDocument doc)> docs)
       {
          return docs.Select(a => (a.location, a.doc, title: a.doc.TryGetTitle()))
                                     .Where(a => a.title != null)

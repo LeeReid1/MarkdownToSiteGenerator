@@ -93,5 +93,18 @@ namespace MarkdownToSiteGeneratorUnitTests
          }
       }
 
+      [TestMethod]
+      public void GetDestination_Sitemap()
+      {
+         string dir_src_top = "/fake/location/for/the/source/".Replace('/', Path.DirectorySeparatorChar);
+         string dir_dest_top = "/fake/location/for/the/destination/".Replace('/', Path.DirectorySeparatorChar);
+
+         PathMapper pm = new(dir_src_top, dir_dest_top);
+
+         // Should always be at the root of the site
+         Assert.AreEqual(Path.GetFullPath(dir_dest_top + "sitemap.xml"), pm.GetDestination_Sitemap_XML());
+         Assert.AreEqual(Path.GetFullPath(dir_dest_top + "sitemap.html"), pm.GetDestination_Sitemap_HTML());
+      }
+
    }
 }

@@ -8,8 +8,10 @@ namespace MarkdownToSiteGenerator.HTML
 {
    internal class Metadata : HtmlSymbol
    {
+      //key that indicates this holds a title
+      internal const string Key_Title = "title";
       protected override string TagCode => "";
-      public bool IsTitle => Key.Equals("title", StringComparison.OrdinalIgnoreCase);
+      public bool IsTitle => Key.Equals(Key_Title, StringComparison.OrdinalIgnoreCase);
       public string Key { get; }
       public string Value { get; }
       public Metadata((string key, string value) vals)

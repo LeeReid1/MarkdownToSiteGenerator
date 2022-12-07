@@ -73,5 +73,9 @@ namespace MarkdownToSiteGenerator
       public string GetURLLocation(FilePath source) => GetDestination(source).ToURLFormat_RelativeToRoot(Dir_DestinationTop);
 
       public FilePath ParsePathIn(string source) => new(Path.GetFullPath(source));
+
+      public FilePath GetDestination_Sitemap_XML() => Dir_DestinationTop + "sitemap.xml";
+
+      public FilePath GetDestination_Sitemap_HTML() => Dir_DestinationTop + "sitemap.html";
    }
 }

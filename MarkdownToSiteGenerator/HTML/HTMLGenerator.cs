@@ -23,12 +23,22 @@ namespace MarkdownToSiteGenerator.HTML
       public StringBuilder Generate(ICollection<(string url, string title)>? itemsInNavBar = null)
       {
          HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, doc.Source);
+         AddOptionalsToDoc(config, itemsInNavBar, htmlDoc);
+
+         return htmlDoc.Write(new StringBuilder());
+      }
+
+      /// <summary>
+      /// Adds things other than content to the doc, like the navigation bar and styling
+      /// </summary>
+      internal static void AddOptionalsToDoc(Configuration config, ICollection<(string url, string title)>? itemsInNavBar, HtmlDocument htmlDoc)
+      {
          if (config.IncludeBootstrap_CSS)
          {
             htmlDoc.AddToHeader("<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65\" crossorigin=\"anonymous\">");
          }
-         if(config.IncludeBootstrap_JS)
-         { 
+         if (config.IncludeBootstrap_JS)
+         {
             htmlDoc.AddToHeader("<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4\" crossorigin=\"anonymous\"></script>");
          }
 
@@ -38,8 +48,6 @@ namespace MarkdownToSiteGenerator.HTML
             itemsInNavBar.Select(cur => new Link(cur.url, cur.title)).ForEach(navbar.Add);
             htmlDoc.Insert(0, navbar);
          }
-
-         return htmlDoc.Write(new StringBuilder());
       }
 
       internal static HtmlSymbol ToHTMLSymbols(ISymbolisedText sym, string source)
@@ -49,7 +57,7 @@ namespace MarkdownToSiteGenerator.HTML
             MarkdownToSiteGenerator.SymbolisedDocument d => new HTML.HtmlDocument(),
             MarkdownToSiteGenerator.Heading h => new HTML.Heading(h),
             MarkdownToSiteGenerator.Paragraph p => new HTML.Paragraph(),
-            MarkdownToSiteGenerator.List l => new HTML.List(l),
+            MarkdownToSiteGenerator.List l => new HTML.List(l.IsOrdered),
             MarkdownToSiteGenerator.ListItem li => new HTML.ListItem(),
             MarkdownToSiteGenerator.LiteralText lt => new HTML.LiteralText(source, lt.Location.ContentLocation),
             MarkdownToSiteGenerator.Metadata lt => new HTML.Metadata(lt.GetKeyAndValue(source)),

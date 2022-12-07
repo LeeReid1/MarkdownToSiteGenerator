@@ -21,7 +21,12 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
       public static void AssertDocument(HtmlDocument doc, Action<HtmlSymbol>[] childVerifications)
       {
          Assert.IsNotNull(doc);
-         Assert.AreEqual(doc.Children.Count, childVerifications.Length);
+         AssertChildren(doc, childVerifications);
+      }
+
+      public static void AssertChildren(HtmlSymbol doc, Action<HtmlSymbol>[] childVerifications)
+      {
+         Assert.AreEqual(childVerifications.Length, doc.Children.Count);
          for (int i = 0; i < childVerifications.Length; i++)
          {
             childVerifications[i].Invoke(doc.Children[i]);
@@ -57,7 +62,7 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
       public static void AssertOrderedList(HtmlSymbol symb, IList<string> text)
       {
          Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.List));
-
+         Assert.IsTrue(((MarkdownToSiteGenerator.HTML.List)symb).IsOrdered);
          Assert.AreEqual(symb.Children.Count, text.Count);
 
          for (int i = 0; i < text.Count; i++)
@@ -65,6 +70,31 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
             Assert.IsInstanceOfType(symb.Children[i], typeof(MarkdownToSiteGenerator.HTML.ListItem));
             AssertPlainContent(symb.Children[i], text[i]);
          }
+      }
+      
+      public static void AssertUnorderedList(HtmlSymbol symb)
+      {
+         Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.List));
+         Assert.IsFalse(((MarkdownToSiteGenerator.HTML.List)symb).IsOrdered);
+      }
+      
+      public static void AssertListItem(HtmlSymbol symb)
+      {
+         Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.ListItem));
+      }      
+      public static void AssertLink(HtmlSymbol symb, string content, string href)
+      {
+         Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Link));
+         Link l = (MarkdownToSiteGenerator.HTML.Link)symb;
+         Assert.AreEqual(href, l.HRef);
+         Assert.AreEqual(1, l.Children.Count);
+         AssertPlainContent(l, content);
+      }
+      
+      public static void AssertOnlyContainsLink(HtmlSymbol symb, string content, string href)
+      {
+         Assert.AreEqual(1, symb.Children.Count);
+         AssertLink(symb.Children[0], content, href);
       }
    }
 }

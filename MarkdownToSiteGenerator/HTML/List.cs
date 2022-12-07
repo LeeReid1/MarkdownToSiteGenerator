@@ -5,12 +5,12 @@
    /// </summary>
    internal class List : HtmlSymbol
    {
-      protected override string TagCode => isOrdered ? "ol" : "ul";
-      readonly bool isOrdered;
+      protected override string TagCode => IsOrdered ? "ol" : "ul";
+      public bool IsOrdered { get; }
 
-      public List(MarkdownToSiteGenerator.List symbol)
+      public List(bool isOrdered)
       {
-         isOrdered = symbol.IsOrdered;
+         this.IsOrdered = isOrdered;
       }
    }
 }
