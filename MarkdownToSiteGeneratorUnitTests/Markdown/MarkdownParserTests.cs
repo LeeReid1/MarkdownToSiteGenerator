@@ -21,7 +21,7 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
 1. third
 1. final item in the list";
 
-         MarkdownParser mp = new MarkdownParser();
+         MarkdownParser mp = new();
          MarkdownToSiteGenerator.SymbolisedDocument doc = mp.Parse(parseMe);
 
          Assert.IsNotNull(doc);
@@ -44,7 +44,7 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
 
 Oh, another one here! Again, not so long";
 
-         MarkdownParser mp = new MarkdownParser();
+         MarkdownParser mp = new();
          MarkdownToSiteGenerator.SymbolisedDocument doc = mp.Parse(parseMe);
 
          Assert.IsNotNull(doc);
@@ -64,7 +64,7 @@ Oh, another one here! Again, not so long";
 ##### penultimate
 ###### final";
 
-         MarkdownParser mp = new MarkdownParser();
+         MarkdownParser mp = new();
          MarkdownToSiteGenerator.SymbolisedDocument doc = mp.Parse(parseMe);
 
          Assert.IsNotNull(doc);

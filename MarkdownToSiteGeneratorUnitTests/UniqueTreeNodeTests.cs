@@ -13,7 +13,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void Constructor()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
          Assert.AreEqual("animals", tree.Value);
          Assert.AreEqual(0, tree.Children.Count);
       }
@@ -21,7 +21,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void AddValueByPath_EmptyPath()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
 
          Assert.ThrowsException<ArgumentException>(() => tree.AddValueByPath(Array.Empty<string>()));
 
@@ -30,7 +30,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void AddValueByPath_ChildNode()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
 
          tree.AddValueByPath(new string[] { "dogs" });
 
@@ -43,7 +43,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void AddValueByPath_GrandChildNode()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
 
          tree.AddValueByPath(new string[] { "dogs", "husky" });
 
@@ -58,13 +58,13 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void AddValueByPath_DuplicateTopNode()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
          Assert.ThrowsException<ArgumentException>(() => tree.AddValueByPath(Array.Empty<string>()));
       }
       [TestMethod]
       public void AddValueByPath_DuplicateGrandChildNode()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
 
          tree.AddValueByPath(new string[] { "dogs", "husky" });
          Assert.ThrowsException<ArgumentException>(() => tree.AddValueByPath(new string[] { "dogs", "husky" }));
@@ -75,7 +75,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void AsEnumerable()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
 
          List<string>[] toAdd = new List<string>[]
          {
@@ -101,7 +101,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public void AsEnumerable_OneNodeTree()
       {
-         UniqueTreeNode<string> tree = new UniqueTreeNode<string>("animals");
+         UniqueTreeNode<string> tree = new("animals");
 
          GenericPath<string>[] paths = tree.ToArray();
          Assert.AreEqual(1, paths.Length);

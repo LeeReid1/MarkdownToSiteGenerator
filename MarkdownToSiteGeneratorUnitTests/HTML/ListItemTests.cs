@@ -14,7 +14,7 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
       {
          string raw = "1. point 1";
 
-         MarkdownToSiteGenerator.Markdown.OrderedListItemParser op = new OrderedListItemParser();
+         MarkdownToSiteGenerator.Markdown.OrderedListItemParser op = new();
          var symbol = op.ToSymbolisedText(raw).First();
 
          HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(symbol, raw);

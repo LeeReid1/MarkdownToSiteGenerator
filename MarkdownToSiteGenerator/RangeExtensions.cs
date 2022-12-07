@@ -8,7 +8,7 @@ namespace MarkdownToSiteGenerator
 {
    public static class RangeExtensions
    {
-      public static Range EmptyRange(Index index) => new Range(index, index);
+      public static Range EmptyRange(Index index) => new(index, index);
 
       public static void AssertForwardDirAndStartBeforeEnd(this Range r)
       {

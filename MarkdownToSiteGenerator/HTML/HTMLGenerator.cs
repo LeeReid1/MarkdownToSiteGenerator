@@ -43,7 +43,7 @@ namespace MarkdownToSiteGenerator.HTML
          {
             MarkdownToSiteGenerator.SymbolisedDocument d => new HTML.HtmlDocument(),
             MarkdownToSiteGenerator.Heading h => new HTML.Heading(h),
-            MarkdownToSiteGenerator.Paragraph p => new HTML.Paragraph(p),
+            MarkdownToSiteGenerator.Paragraph p => new HTML.Paragraph(),
             MarkdownToSiteGenerator.List l => new HTML.List(l),
             MarkdownToSiteGenerator.ListItem li => new HTML.ListItem(),
             MarkdownToSiteGenerator.LiteralText lt => new HTML.LiteralText(source, lt.Location.ContentLocation),
