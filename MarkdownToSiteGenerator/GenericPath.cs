@@ -1,7 +1,7 @@
 ﻿namespace MarkdownToSiteGenerator
 {
-   public class GenericPath<T> : IEquatable<GenericPath<T>>
-      where T:IEquatable<T>
+   public class GenericPath<T> : IEquatable<GenericPath<T>>, IComparable, IComparable<GenericPath<T>>
+      where T:IEquatable<T>, IComparable
    {
       public IReadOnlyList<T> Parts { get; }
 
@@ -24,5 +24,14 @@
          }
       }
       public bool Equals(GenericPath<T>? other) => other != null && Parts.SequenceEqual(other.Parts);
+
+      public int CompareTo(object? obj) => obj is GenericPath<T> gp ? CompareTo(gp) : 0;
+
+      public int CompareTo(GenericPath<T>? other)
+      {
+         if(other == null) return 0;
+
+         return string.Join('/', Parts.ToArray()).CompareTo(string.Join('/', Parts.ToArray()));
+      }
    }
 }

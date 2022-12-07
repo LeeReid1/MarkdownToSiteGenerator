@@ -21,6 +21,8 @@ namespace MarkdownToSiteGenerator.HTML
       }
       protected override void WriteContent(StringBuilder sb)
       {
+         SanitiseMetadata();
+
          sb.AppendLine("<head>");
          metaData.ForEach(item => item.Write(sb));
          headerExtras.ForEach(item => sb.AppendLine(item));
@@ -40,7 +42,16 @@ namespace MarkdownToSiteGenerator.HTML
          }
       }
 
-
+      private void SanitiseMetadata()
+      {
+         // Remove duplicate titles and ensure it is the first item so it is written first
+         var titles = metaData.Where(a => a.IsTitle).ToList();
+         if(titles.Count != 0)
+         {
+            metaData.RemoveAll(titles.Contains);
+            metaData.Insert(0, titles[0]);
+         }
+      }
 
       internal void AddToHeader(string line) => headerExtras.Add(line);
 

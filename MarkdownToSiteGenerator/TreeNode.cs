@@ -13,7 +13,7 @@ namespace MarkdownToSiteGenerator
    /// Represents a tree, or path thereof, with no full-path duplicates
    /// </summary>
    /// <typeparam name="T">The value held at each leaf or branch point</typeparam>
-   public class UniqueTreeNode<T> : IEnumerable<GenericPath<T>> where T : IEquatable<T>
+   public class UniqueTreeNode<T> : IEnumerable<GenericPath<T>> where T : IEquatable<T>, IComparable<T>, IComparable
    {
       public List<UniqueTreeNode<T>> Children { get; } = new List<UniqueTreeNode<T>>();
       public T Value { get; }
@@ -51,7 +51,7 @@ namespace MarkdownToSiteGenerator
 
       private UniqueTreeNode<T> AddChildPath(IEnumerator<T> path)
       {
-         UniqueTreeNode<T> next = new UniqueTreeNode<T>(path.Current);
+         UniqueTreeNode<T> next = new(path.Current);
          if (path.MoveNext())
          {
             next.AddChildPath(path);
@@ -63,7 +63,7 @@ namespace MarkdownToSiteGenerator
 
       public IEnumerable<GenericPath<T>> AsEnumerable()
       {
-         List<T> path = new List<T>();
+         List<T> path = new();
          return Sub(this, path);
 
          static IEnumerable<GenericPath<T>> Sub(UniqueTreeNode<T> node, List<T> prepend)

@@ -9,7 +9,7 @@ namespace MarkdownToSiteGenerator.HTML
    internal class Metadata : HtmlSymbol
    {
       protected override string TagCode => "";
-
+      public bool IsTitle => Key.Equals("title", StringComparison.OrdinalIgnoreCase);
       public string Key { get; }
       public string Value { get; }
       public Metadata((string key, string value) vals)
@@ -23,7 +23,7 @@ namespace MarkdownToSiteGenerator.HTML
 
       public override StringBuilder Write(StringBuilder sb)
       {
-         if (Key.Equals("title", StringComparison.OrdinalIgnoreCase))
+         if (IsTitle)
          {
             // special case
             sb.Append("<title>").Append(Value).AppendLine("</title>");

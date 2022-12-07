@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
-   public class SiteGenerator<TPathIn, TPathOut> 
+   public class SiteGenerator<TPathIn, TPathOut> where TPathIn:IComparable
    {
       readonly ISourceFileProvider<TPathIn> sourceFileProvider;
       readonly IPathMapper<TPathIn, TPathOut> pathMapper;
