@@ -10,12 +10,12 @@ namespace MarkdownToSiteGenerator.HTML
    {
       protected override string TagCode => "";
 
-      readonly string key;
-      readonly string value;
+      public string Key { get; }
+      public string Value { get; }
       public Metadata((string key, string value) vals)
       {
-         this.key = vals.key;
-         this.value = vals.value;
+         this.Key = vals.key;
+         this.Value = vals.value;
       }
 
       protected override void WriteContent(StringBuilder sb)
@@ -23,14 +23,14 @@ namespace MarkdownToSiteGenerator.HTML
 
       public override StringBuilder Write(StringBuilder sb)
       {
-         if (key.Equals("title", StringComparison.OrdinalIgnoreCase))
+         if (Key.Equals("title", StringComparison.OrdinalIgnoreCase))
          {
             // special case
-            sb.Append("<title>").Append(value).AppendLine("</title>");
+            sb.Append("<title>").Append(Value).AppendLine("</title>");
          }
          else
          {
-            sb.Append("<meta property=\"").Append(key).Append("\" content=\"").Append(value).AppendLine("\">");
+            sb.Append("<meta property=\"").Append(Key).Append("\" content=\"").Append(Value).AppendLine("\">");
          }
          return sb;
       }

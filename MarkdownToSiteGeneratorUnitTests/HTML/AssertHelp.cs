@@ -9,6 +9,15 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
 {
    internal static class AssertHelp
    {
+      public static void AssertMetadata(HtmlDocument doc, Action<HtmlSymbol>[] childVerifications)
+      {
+         Assert.IsNotNull(doc);
+         Assert.AreEqual(doc.Metadata.Count, childVerifications.Length);
+         for (int i = 0; i < childVerifications.Length; i++)
+         {
+            childVerifications[i].Invoke(doc.Metadata[i]);
+         }
+      }
       public static void AssertDocument(HtmlDocument doc, Action<HtmlSymbol>[] childVerifications)
       {
          Assert.IsNotNull(doc);
@@ -38,6 +47,12 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
          Assert.AreEqual(level, ((MarkdownToSiteGenerator.HTML.Heading)symb).Level);
 
          AssertPlainContent(symb, text);
+      }
+      public static void AssertMetadata(HtmlSymbol symb, string key, string value)
+      {
+         Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Metadata));
+         Assert.AreEqual(key, ((MarkdownToSiteGenerator.HTML.Metadata)symb).Key);
+         Assert.AreEqual(value, ((MarkdownToSiteGenerator.HTML.Metadata)symb).Value);
       }
       public static void AssertOrderedList(HtmlSymbol symb, IList<string> text)
       {

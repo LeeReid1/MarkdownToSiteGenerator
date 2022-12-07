@@ -8,8 +8,8 @@
 
       internal (string key, string value) GetKeyAndValue(string source)
       {
-         int splitAt = source.IndexOf(':');
-         return (source[..splitAt], source[(splitAt + 1)..].Trim());
+         int splitAt = source.IndexOf(':', Location.ContentLocation.Start);
+         return (source[Location.ContentLocation.Start..splitAt], source[(splitAt + 1)..Location.ContentLocation.End].Trim());
       }
 
    }

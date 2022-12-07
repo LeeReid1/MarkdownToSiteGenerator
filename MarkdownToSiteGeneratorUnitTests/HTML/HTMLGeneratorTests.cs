@@ -70,5 +70,30 @@ Final paragraph text";
          });
       }
 
+      [TestMethod]
+      public void MarkdownDocToHtmlDoc_MetadataAndHeading()
+      {
+         string raw =
+@"title: Home
+keywords: homepage c# markdown
+
+# Top Section
+";
+
+         var doc = new MarkdownParser().Parse(raw);
+
+         HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(doc, raw);
+
+         AssertHelp.AssertMetadata((HtmlDocument)made, new Action<HtmlSymbol>[]
+         {
+            s=>AssertHelp.AssertMetadata(s,"title","Home"),
+            s=>AssertHelp.AssertMetadata(s,"keywords","homepage c# markdown"),
+         });
+         AssertHelp.AssertDocument((HtmlDocument)made, new Action<HtmlSymbol>[]
+         {
+            s=>AssertHelp.AssertHeading(s, 1, "Top Section")
+         });
+      }
+
    }
 }

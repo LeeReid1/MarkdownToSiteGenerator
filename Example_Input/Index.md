@@ -1,3 +1,6 @@
+title: Home
+keywords: homepage c# markdown
+
 # Top Section
 
 This is some text, and here's a list:

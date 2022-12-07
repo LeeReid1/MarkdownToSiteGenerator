@@ -54,9 +54,28 @@ namespace MarkdownToSiteGenerator.HTML
          };
 
          // Recurse for children
-         sym.Children.Select(a => ToHTMLSymbols(a, source)).ForEach(htmlSymb.Add);
+         sym.Children.Select(a => ToHTMLSymbols(a, source)).ForEach(AddChild);
 
          return htmlSymb;
+
+         void AddChild(HtmlSymbol addMe)
+         {
+            if(addMe is HTML.Metadata m)
+            {
+               if(htmlSymb is HtmlDocument doc)
+               {
+                  doc.AddToHeader(m);
+               }
+               else
+               {
+                  throw new Exception("Metadata can only be at the document level");
+               }
+            }
+            else
+            {
+               htmlSymb.Add(addMe);
+            }
+         }
       }
 
    }
