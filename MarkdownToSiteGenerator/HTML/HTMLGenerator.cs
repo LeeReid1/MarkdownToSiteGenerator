@@ -23,7 +23,7 @@ namespace MarkdownToSiteGenerator.HTML
       public StringBuilder Generate(Func<string, string> linkRewriter, ICollection<(string url, string title)>? itemsInNavBar = null)
       {
          HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, doc.Source, linkRewriter);
-         AddOptionalsToDoc(config, itemsInNavBar, htmlDoc);
+         AddOptionalsToDoc(config, itemsInNavBar, htmlDoc, linkRewriter);
 
          return htmlDoc.Write(new StringBuilder());
       }
@@ -31,7 +31,7 @@ namespace MarkdownToSiteGenerator.HTML
       /// <summary>
       /// Adds things other than content to the doc, like the navigation bar and styling
       /// </summary>
-      internal static void AddOptionalsToDoc(Configuration config, ICollection<(string url, string title)>? itemsInNavBar, HtmlDocument htmlDoc)
+      internal static void AddOptionalsToDoc(Configuration config, ICollection<(string url, string title)>? itemsInNavBar, HtmlDocument htmlDoc, Func<string, string> linkRewriter)
       {
          if (config.IncludeBootstrap_CSS)
          {
@@ -44,7 +44,10 @@ namespace MarkdownToSiteGenerator.HTML
 
          if (itemsInNavBar != null)
          {
-            Navbar navbar = new();
+            Navbar navbar = new(linkRewriter(config.HomePage))
+            {
+               SiteName = config.SiteName
+            };
             itemsInNavBar.Select(cur => new Link(cur.url, cur.title)).ForEach(navbar.Add);
             htmlDoc.Insert(0, navbar);
          }

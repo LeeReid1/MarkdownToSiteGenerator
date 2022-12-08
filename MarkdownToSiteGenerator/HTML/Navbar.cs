@@ -10,13 +10,22 @@ namespace MarkdownToSiteGenerator.HTML
    {
       protected override string TagCode => "nav";
       public override string CSSClass => "navbar navbar-expand-lg navbar-light bg-light";
-
+      public string? SiteName { get; set; }
+      public string HomePage { get; set; }
+      public Navbar(string homePage)
+      {
+         HomePage = homePage;
+      }
       protected override void WriteContent(StringBuilder sb)
       {
-         sb.AppendLine(
-@"<div class=""container-fluid"">
-   <a class=""navbar-brand me-auto"" style=""margin-left: 20px"" href=""#"">Example Name</a>
-      <button
+         sb.AppendLine("<div class=\"container-fluid\">");
+         if(!string.IsNullOrEmpty(SiteName))
+         {
+            sb.AppendLine("<a class=\"navbar-brand me-auto\" style=\"margin-left: 20px\" href=\"").Append(HomePage).Append("\">").Append(SiteName).AppendLine("</a>");
+         }
+
+sb.AppendLine(
+@"      <button
          class=""navbar-toggler bg-light""
          type=""button""
          data-bs-toggle=""collapse""

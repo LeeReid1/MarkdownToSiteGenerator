@@ -13,10 +13,14 @@ namespace MarkdownToSiteGenerator
       public const string Key_IncludeBootstrap_CSS = "include_bootstrap_css";
       public const string Key_CreateSiteMaps = "create_sitemaps";
       public const string Key_DestinationDomain = "destination_domain";
+      public const string Key_SiteName = "site_name";
+      public const string Key_HomePage = "home_page";
 
       public bool IncludeBootstrap_JS { get; set; }
       public bool IncludeBootstrap_CSS { get; set; }
       public bool CreateSiteMaps { get; set; }
+      public string? SiteName { get; set; }
+      public string HomePage { get; set; } = "/";
 
       string? _destinationDomain;
       /// <summary>
@@ -60,7 +64,9 @@ namespace MarkdownToSiteGenerator
             IncludeBootstrap_JS = ParseBool(Key_IncludeBootstrap_JS, true),
             IncludeBootstrap_CSS = ParseBool(Key_IncludeBootstrap_CSS, true),
             CreateSiteMaps = ParseBool(Key_CreateSiteMaps, true),
-            DestinationDomain = cr?[Key_DestinationDomain]
+            DestinationDomain = cr?[Key_DestinationDomain],
+            SiteName = cr?[Key_SiteName],
+            HomePage = cr?[Key_HomePage] ?? "/"
          };
 
 

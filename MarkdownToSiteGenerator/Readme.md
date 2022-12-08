@@ -42,13 +42,25 @@ If your page title contains spaces, replace them with underscores in the link. F
 
 Links written in this way are checked for correctness. An exception is thrown if the page is not found.
 
-### Linking between
+### Linking to URLs
 
 You can also link directly to urls, which will not be altered, in the normal way. These must begin with `/`, `//`, `https://` or `www.`:
 
 ```
 [the content of the link](https://example.com)
 ```
+
+
+### Home in the Navigation Bar
+
+The navigation bar will link to your home page if you include the following in your config.ini file:
+
+```
+site_name=<the name of the link text you would like in the navigation bar>
+home_page=<title of your home page> (not the path)
+```
+
+See Metadata in this document to understand the title. If you do not provide the `home_page` but do provide the `site_name` the link will be to `/`.
 
 
 ## Metadata

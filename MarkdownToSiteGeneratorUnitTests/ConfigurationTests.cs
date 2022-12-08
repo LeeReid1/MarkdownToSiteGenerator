@@ -17,6 +17,14 @@ namespace MarkdownToSiteGeneratorUnitTests
          string content = $"";
          Configuration config = Configuration.IniToConfiguration(content);
          Assert.IsNotNull(config);
+
+         // Check stability and sensible defaults
+         Assert.IsNull(config.SiteName);
+         Assert.IsTrue(config.CreateSiteMaps);
+         Assert.IsTrue(config.IncludeBootstrap_CSS);
+         Assert.IsTrue(config.IncludeBootstrap_JS);
+         Assert.IsNull(config.DestinationDomain);
+         Assert.AreEqual("/", config.HomePage);
       }
       
       [TestMethod]
@@ -51,6 +59,30 @@ namespace MarkdownToSiteGeneratorUnitTests
          
          Assert.AreEqual(val, config.CreateSiteMaps);
       }
+      
+      
+      [TestMethod]
+      [DataRow("legendary site")]
+      [DataRow("")]
+      public void IniToConfiguration_SiteName(string val)
+      {
+         string content = $"{Configuration.Key_SiteName}={val}";
+         Configuration config = Configuration.IniToConfiguration(content);
+         
+         Assert.AreEqual(val, config.SiteName);
+      }
+
+      
+      [TestMethod]
+      [DataRow("home page")]
+      public void IniToConfiguration_HomePage(string val)
+      {
+         string content = $"{Configuration.Key_HomePage}={val}";
+         Configuration config = Configuration.IniToConfiguration(content);
+         
+         Assert.AreEqual(val, config.HomePage);
+      }
+
       
 
       [TestMethod]
