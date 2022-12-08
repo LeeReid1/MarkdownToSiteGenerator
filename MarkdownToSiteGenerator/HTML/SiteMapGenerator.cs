@@ -99,6 +99,10 @@ namespace MarkdownToSiteGenerator.HTML
             else
             {
                ListItem li = new();
+               if (path.Count != 1)
+               {
+                  li.Add(new LiteralText(path[^1]));//folder name
+               }
                List l = new(false);
                foreach (var child in tree.Children)
                {

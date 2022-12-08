@@ -60,9 +60,10 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
                            other=>{ AssertHTML.AssertListItem(other);
                                     AssertHTML.AssertChildren(other, new Action<HtmlSymbol>[]
                                     {
-                                       child =>
-                                          {  AssertHTML.AssertUnorderedList(child);
-                                           AssertHTML.AssertChildren(child, new Action<HtmlSymbol>[]
+                                          text => AssertHTML.AssertLiteralText(text, "other"),
+                                       childList =>
+                                          {  AssertHTML.AssertUnorderedList(childList);
+                                           AssertHTML.AssertChildren(childList, new Action<HtmlSymbol>[]
                                            {
                                               dog =>  {AssertHTML.AssertListItem(dog); AssertHTML.AssertOnlyContainsLink(dog,"other dog", "/other/dog.txt"); },
                                               dog2 => {AssertHTML.AssertListItem(dog2); AssertHTML.AssertOnlyContainsLink(dog2,"last", "/other/dog2.txt"); }
