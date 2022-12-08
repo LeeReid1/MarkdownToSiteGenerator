@@ -75,18 +75,28 @@ author: Mike Dent
 
 ```
 
-These, if any, must appear at the start of the document. They will be placed in the HTML head as meta tags. Stick to letters (a-Z) for the keys.
+These, if any, must appear at the start of the document. All except `title:` will be placed in the HTML head as meta tags. Stick to letters (a-Z) for the keys.
 
 ### Title Tag
 
 The title metadata tag is special and used for:
 
-1. Building link text to that file
-2. `<title>` in the html head (rather than `<meta>`)
+1. Building link text to that page
+1. Linking internally to that page (see Linking Between Pages)
+1. Setting `<title>` in the html head
 
 If you do not provide a title tag, the first H1 is used in its place.
 
+#### Avoid Duplicates
 It is critical that your pages never have identical titles as it makes linking impossible. Duplicate titles will result in an exception.
+
+Page titles are not case-sensitive. They are also considered duplicates if matching when spaces are replaced with underscores. For example
+
+```
+my title == my_title
+MyTiTlE == mytitle
+My_TiTlE == my_title
+```
 
 ## Limitations
 
