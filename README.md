@@ -1,6 +1,5 @@
 # Markdown-To-Site Generator
 
-
 ![Build And Test](https://github.com/LeeReid1/MarkdownToSiteGenerator/actions/workflows/dotnet.yml/badge.svg)
 
 This solution builds a static multiple-HTML-page site from a directory of markdown files that can be hosted without an application layer. The builder produces pages based on a standard Bootstrap HTML5 style, including a drop-down menu to navigate. Images, JS, and style sheets are placed in separate directories.
@@ -87,10 +86,12 @@ The title metadata tag is special and used for:
 
 If you do not provide a title tag, the first H1 is used in its place.
 
+It's ok to use spaces in page titles. Take note that to link to pages which has spaces in the name, you should replace the spaces with underscores (see Linking Between Pages).
+
 #### Avoid Duplicates
 It is critical that your pages never have identical titles as it makes linking impossible. Duplicate titles will result in an exception.
 
-Page titles are not case-sensitive. They are also considered duplicates if matching when spaces are replaced with underscores. For example
+Page titles are not case-sensitive. They are also considered duplicates if matching when spaces are replaced with underscores. For example:
 
 ```
 my title == my_title
