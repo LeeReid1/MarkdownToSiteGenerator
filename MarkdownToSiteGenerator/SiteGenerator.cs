@@ -49,13 +49,13 @@ namespace MarkdownToSiteGenerator
          // Check that titles are well formed
          // This is important to avoid a crash when creating the dictionary and
          // to allow links to work when only incorrect due to mismatched case
-         if (withTitle.Select(a => a.title.ToLowerInvariant().Replace(' ', '_')).ContainsDuplicates())
+         if (withTitle.Select(a => NormaliseTitle(a.title)).ContainsDuplicates())
          {
             throw new Exception("Page titles are not unique. Titles are not case-sensitive, and underscores and spaces are considered equivalent");
          }
 
-         Dictionary<string, TPathIn> allPagesByTitle = withTitle.ToDictionary(a => a.title, a => a.location);
-         Func<string, string> rewriteLink = title => RewriteLink(title, allPagesByTitle);
+         Dictionary<string, TPathIn> allPagesByNormalisedTitle = withTitle.ToDictionary(a => NormaliseTitle(a.title), a => a.location);
+         Func<string, string> rewriteLink = title => RewriteLink(title, allPagesByNormalisedTitle);
          foreach ((TPathIn location, SymbolisedDocument doc) in docs)
          {
             await converter.ConvertAndWriteHTML(doc, location, rewriteLink, withTitle, config);
@@ -90,14 +90,10 @@ namespace MarkdownToSiteGenerator
          StringBuilder map = doc.Write(new StringBuilder());
          await fileWriter.Write(map, pathMapper.GetDestination_Sitemap_HTML());
       }
-
-      private string RewriteLink(string written, IReadOnlyDictionary<string, TPathIn> allPagesByName)
+      private static string NormaliseTitle(string s) => s.Replace(' ', '_').ToLowerInvariant(); // _ is recognised as a space to allow valid markdown for titles with spaces
+      private string RewriteLink(string written, IReadOnlyDictionary<string, TPathIn> allPagesByNormalisedTitle)
       {
-         if (
-            allPagesByName.TryGetValue(written, out var page) ||
-            allPagesByName.TryGetValue(written.ToLowerInvariant(), out page) ||
-            allPagesByName.TryGetValue(written.Replace('_', ' '), out page) || // _ is recognised as a space to allow valid markdown for titles with spaces
-            allPagesByName.TryGetValue(written.ToLowerInvariant().Replace('_', ' '), out page))
+         if (allPagesByNormalisedTitle.TryGetValue(NormaliseTitle(written), out var page))
          {
             return pathMapper.GetURLLocation(page);
          }
@@ -110,7 +106,6 @@ namespace MarkdownToSiteGenerator
             throw new Exception($"Could not find page {written} to link to. Write link as the page title, or as a fully qualified URL (https://)");
          }
       }
-
 
 
       private static List<(TPathIn location, string title)> GetTitles(List<(TPathIn location, SymbolisedDocument doc)> docs)

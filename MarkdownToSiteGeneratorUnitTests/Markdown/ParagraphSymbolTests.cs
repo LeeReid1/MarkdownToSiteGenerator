@@ -31,6 +31,38 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
          AssertHelp.AssertLink(symb.Items[1], text, "my site", "https://example.com");
          AssertHelp.AssertPlainContent(symb.Items[2], text, " still the paragraph");
       }
+            
+      [TestMethod]
+      public void GetMultipleMatches_WithLink()
+      {
+         var h = new  ParagraphSymbolParser();
+
+         string text =
+@"You can use the menu bar to see pages in this website, or jump straight to the page about cat [history](some_page).
+
+You can also take a look at the [site map](/sitemap.html)!".ReplaceLineEndings();
+
+         SymbolisedTextWithChildren[] symbols = h.ToSymbolisedText(text).ToArray();
+         Assert.AreEqual(2, symbols.Length);
+
+         {
+            Assert.IsInstanceOfType(symbols[0], typeof(MarkdownToSiteGenerator.Paragraph));
+            MarkdownToSiteGenerator.Paragraph symb = (MarkdownToSiteGenerator.Paragraph)symbols[0];
+            Assert.AreEqual(3, symb.Children.Count());
+            AssertHelp.AssertPlainContent(symb.Items[0], text, "You can use the menu bar to see pages in this website, or jump straight to the page about cat ");
+            AssertHelp.AssertLink(symb.Items[1], text, "history", "some_page");
+            AssertHelp.AssertPlainContent(symb.Items[2], text, ".");
+         }
+
+         {
+            Assert.IsInstanceOfType(symbols[1], typeof(MarkdownToSiteGenerator.Paragraph));
+            MarkdownToSiteGenerator.Paragraph symb = (MarkdownToSiteGenerator.Paragraph)symbols[1];
+            Assert.AreEqual(3, symb.Children.Count());
+            AssertHelp.AssertPlainContent(symb.Items[0], text, "You can also take a look at the ");
+            AssertHelp.AssertLink(symb.Items[1], text, "site map", "/sitemap.html");
+            AssertHelp.AssertPlainContent(symb.Items[2], text, "!");
+         }
+      }
 
 
       [TestMethod]

@@ -15,7 +15,7 @@
       /// Returns the title in the metadata. If not found, returns the first encountered H1 text. If not found, returns null
       /// </summary>
       /// <returns></returns>
-      public string? TryGetTitle() => TryGetMetadata("title") ?? TryGetH1Text()?.ToLowerInvariant();
+      public string? TryGetTitle() => TryGetMetadata("title") ?? TryGetH1Text();
       
       public string? TryGetMetadata(string key)=> Metadata.FirstOrNull(a=>a.key.Equals(key, StringComparison.OrdinalIgnoreCase))?.value;
       /// <summary>

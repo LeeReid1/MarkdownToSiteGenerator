@@ -52,7 +52,7 @@ Ok, not much to say, really. But these animals are certainly popular.
          string source =
 @"title: cats
 
-# My Cat page
+# My Cat page!
 
 # Another title
 
@@ -62,14 +62,14 @@ Ok, not much to say, really. But these animals are certainly popular.
 
          // manually parse the text
          int start = source.IndexOf('#') +2;
-         sd.Items.Add(CreateH1("My Cat page", start));
+         sd.Items.Add(CreateH1("My Cat page!", start));
 
 
          start = source.IndexOf('#', start);
          sd.Items.Add(CreateH1("Another title", start));
          
          // Test
-         Assert.AreEqual("My Cat page", sd.TryGetH1Text());
+         Assert.AreEqual("My Cat page!", sd.TryGetH1Text());
       }
 
       [TestMethod]

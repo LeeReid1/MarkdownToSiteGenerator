@@ -108,7 +108,7 @@ This is my new site
 
       [TestMethod]
       [DataRow((byte)1, "Level 1")]
-      [DataRow((byte)2, "Level Two")]
+      [DataRow((byte)2, "Level Two:")]
       public void GetMatches_OneToFind_AmongstParagraphs(byte level, string contentExpected)
       {
          var h = new HeaderSymbolParser(level);
@@ -120,7 +120,7 @@ This is my new site
 
 Some more paragraph text
 
-## Level Two
+## Level Two:
 
 Final paragraph text
 
@@ -139,10 +139,10 @@ Final paragraph text
 
          string text =
 @"# Level 1
-## Level Two
+## Level Two!
 ### Level 3
 
-## Subheading
+## Subheading?
 
 # No
 
@@ -155,8 +155,8 @@ This is my new site
          var round = h.GetMatches(text).ToList();
          Assert.AreEqual(3, round.Count);
 
-         Check(text, round, 0, "## ", "Level Two", Environment.NewLine);
-         Check(text, round, 1, "## ", "Subheading", Environment.NewLine);
+         Check(text, round, 0, "## ", "Level Two!", Environment.NewLine);
+         Check(text, round, 1, "## ", "Subheading?", Environment.NewLine);
          Check(text, round, 2, "## ", "Final one", string.Empty);
       }
       static void Check(string text, List<SymbolLocation> round, int index, string expectedMarkup, string expectedContent, string expectedTail)

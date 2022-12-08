@@ -37,7 +37,7 @@
                   // For what remains, split the source and parse the fragments separately
                   // (doing so avoids issues in case of badly formed MD that results in overlap)
                   // Don't re-parse with parsers that have already run, for efficiency
-                  IEnumerable<SimpleRange> fragments = new SimpleRange(0, source.Length).SplitExclude(children.Select(a => a.Location.FullRange));
+                  IEnumerable<SimpleRange> fragments = rangeToParse.SplitExclude(children.Select(a => a.Location.FullRange));
                   foreach (var fragment in fragments)
                   {
                      Sub(fragment, iParser + 1);
