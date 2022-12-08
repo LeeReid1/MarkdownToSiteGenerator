@@ -8,8 +8,14 @@ namespace MarkdownToSiteGenerator
 {
    internal class FileWriter : IFileWriter<FilePath>
    {
-      public void Delete(FilePath path) => File.Delete(path.ToAbsoluteString());
-
+      public void Delete(FilePath path)
+      {
+         string abs = path.ToAbsoluteString();
+         if (File.Exists(abs))
+         {
+            File.Delete(abs);
+         }
+      }
       public bool FileExists(FilePath path) => File.Exists(path.ToString());
       public async Task Write(StringBuilder content, FilePath destination)
       {
