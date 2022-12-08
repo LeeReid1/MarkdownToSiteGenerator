@@ -1,6 +1,6 @@
-title: behaviour and intelligence
+title: Behaviour and Intelligence
 
-# The behavior and intelligence of cats:
+# The behavior and intelligence of cats
 
 The markdown for this file has a space in it. You'll notice how the HTML file does not, and links also do not (check the menu).
 

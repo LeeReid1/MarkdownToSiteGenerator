@@ -1,4 +1,4 @@
-title: history
+title: History
 
 # The history and origins of domestic cats:
 
