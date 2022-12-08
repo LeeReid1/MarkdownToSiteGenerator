@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator.Markdown
 {
-   internal class MetadataParser : TopLevelObjectParser
+   internal class MetadataParser : ParentMarkdownSymbolParser
    {
       protected override string RegexStr => @"(^(?:\r\n|\n)*)(\w+\:\s+[^(?:\n|\r)]*)(\r\n|\n|$)";
 

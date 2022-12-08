@@ -1,6 +1,6 @@
 ﻿namespace MarkdownToSiteGenerator.Markdown
 {
-   internal class ParagraphSymbolParser : TopLevelObjectParser
+   internal class ParagraphSymbolParser : ParentMarkdownSymbolParser
    {
       protected override string RegexStr => @"(^)(\S+?[\s\S]*?)((?:\r\n|\n|\z){2}|\z)";
 

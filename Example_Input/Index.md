@@ -8,4 +8,4 @@ This is some text, and here's a list:
 1. List first item
 2. The list second item
 
-There are some other pages in this section
+There are some other pages in this section, like [Page 2](Second_Page)

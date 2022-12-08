@@ -17,7 +17,7 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
          MarkdownToSiteGenerator.Markdown.OrderedListItemParser op = new();
          var symbol = op.ToSymbolisedText(raw).First();
 
-         HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(symbol, raw);
+         HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(symbol, raw, a=>a);
 
          Assert.IsInstanceOfType(made, typeof(MarkdownToSiteGenerator.HTML.ListItem));
 

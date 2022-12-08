@@ -1,8 +1,6 @@
-﻿using System.Reflection.Emit;
-
-namespace MarkdownToSiteGenerator.Markdown
+﻿namespace MarkdownToSiteGenerator.Markdown
 {
-   internal class HeaderSymbolParser : TopLevelObjectParser
+   internal class HeaderSymbolParser : ParentMarkdownSymbolParser
    {
       readonly byte level;
       protected override string RegexStr { get; }

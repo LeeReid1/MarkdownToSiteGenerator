@@ -20,9 +20,9 @@ namespace MarkdownToSiteGenerator.HTML
          this.config = config;
       }
 
-      public StringBuilder Generate(ICollection<(string url, string title)>? itemsInNavBar = null)
+      public StringBuilder Generate(Func<string, string> linkRewriter, ICollection<(string url, string title)>? itemsInNavBar = null)
       {
-         HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, doc.Source);
+         HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, doc.Source, linkRewriter);
          AddOptionalsToDoc(config, itemsInNavBar, htmlDoc);
 
          return htmlDoc.Write(new StringBuilder());
@@ -50,13 +50,16 @@ namespace MarkdownToSiteGenerator.HTML
          }
       }
 
-      internal static HtmlSymbol ToHTMLSymbols(ISymbolisedText sym, string source)
+      internal static HtmlSymbol ToHTMLSymbols(ISymbolisedText sym, string source) => ToHTMLSymbols(sym, source, a => a);
+      /// <param name="linkRewriter">A function that swaps one link for another URL. If not wanted, provide a=>a</param>
+      internal static HtmlSymbol ToHTMLSymbols(ISymbolisedText sym, string source, Func<string, string> linkRewriter)
       {
          HtmlSymbol htmlSymb = sym switch
          {
             MarkdownToSiteGenerator.SymbolisedDocument d => new HTML.HtmlDocument(),
             MarkdownToSiteGenerator.Heading h => new HTML.Heading(h),
             MarkdownToSiteGenerator.Paragraph p => new HTML.Paragraph(),
+            MarkdownToSiteGenerator.Link link => new HTML.Link() {  HRef= linkRewriter(link.GetHref(source).ToString()) },
             MarkdownToSiteGenerator.List l => new HTML.List(l.IsOrdered),
             MarkdownToSiteGenerator.ListItem li => new HTML.ListItem(),
             MarkdownToSiteGenerator.LiteralText lt => new HTML.LiteralText(source, lt.Location.ContentLocation),
@@ -65,7 +68,7 @@ namespace MarkdownToSiteGenerator.HTML
          };
 
          // Recurse for children
-         sym.Children.Select(a => ToHTMLSymbols(a, source)).ForEach(AddChild);
+         sym.Children.Select(a => ToHTMLSymbols(a, source, linkRewriter)).ForEach(AddChild);
 
          return htmlSymb;
 

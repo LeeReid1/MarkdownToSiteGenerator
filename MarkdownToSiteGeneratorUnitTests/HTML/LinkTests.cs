@@ -1,6 +1,5 @@
 using MarkdownToSiteGenerator;
 using MarkdownToSiteGenerator.HTML;
-using MarkdownToSiteGenerator.Markdown;
 using System.Text;
 
 namespace MarkdownToSiteGeneratorUnitTests.HTML
@@ -11,7 +10,7 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
       [TestMethod]
       public void ToHTML()
       {
-         Link l = new()
+         MarkdownToSiteGenerator.HTML.Link l = new()
          {
             CSSClass = "special blue",
             HRef = "https://example.com"

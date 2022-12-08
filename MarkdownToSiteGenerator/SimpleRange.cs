@@ -10,7 +10,7 @@ namespace MarkdownToSiteGenerator
    /// <summary>
    /// Describes a range of integers
    /// </summary>
-   public readonly struct SimpleRange
+   public readonly struct SimpleRange : IEquatable<SimpleRange>
    {
       public int Start { get; }
       public int End { get; }
@@ -27,5 +27,43 @@ namespace MarkdownToSiteGenerator
 
       [MethodImpl(MethodImplOptions.AggressiveInlining)]
       public static SimpleRange Empty(int start) => new(start, start);
+
+      /// <summary>
+      /// Splits into sub-ranges at and excluding the ranges provided
+      /// </summary>
+      public IEnumerable<SimpleRange> SplitExclude(IEnumerable<SimpleRange> splitAt)
+      {
+         int thisStart = Start;//req by compiler
+         int thisEnd = End; 
+         List<SimpleRange> ranges = splitAt.OrderBy(x => x.Start)
+                                           .ThenBy(a => a.End)
+                                           .SkipWhile(a => a.End < thisStart)
+                                           .TakeWhile(a => a.Start <= thisEnd)
+                                           .ToList();
+
+         List<SimpleRange> gaps = new List<SimpleRange>();
+
+         int pos = thisStart;
+         int excludeTill = pos;
+         for (int i = 0; i < ranges.Count; i++)
+         {
+            var cur = ranges[i];
+            if(pos < cur.Start)
+            {
+               // We are in a gap
+               yield return new SimpleRange(pos, cur.Start);
+            }
+            // Move to the end of that range
+            excludeTill = Math.Max(excludeTill, cur.End);
+            pos = excludeTill;
+         }
+
+         if(pos < thisEnd)
+         {
+            yield return new SimpleRange(pos, thisEnd);
+         }
+      }
+
+      public bool Equals(SimpleRange other)=> this.Start == other.Start && this.End == other.End;
    }
 }

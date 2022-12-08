@@ -20,7 +20,7 @@ This is my new site
 * Test one
 * Test two
 
-";
+".ReplaceLineEndings();
 
          Assert.AreEqual(0, parser.GetMatches(text).Count());
       }
@@ -42,7 +42,7 @@ This is my new site
 * Test one
 * Test two
 
-";
+".ReplaceLineEndings();
 
          var round = parser.GetMatches(text).ToList();
          Assert.AreEqual(1, round.Count);
@@ -69,7 +69,7 @@ This is my new site
 * Test one
 * Test two
 
-";
+".ReplaceLineEndings();
 
          var round = parser.GetMatches(text).ToList();
          Assert.AreEqual(2, round.Count);
@@ -87,7 +87,7 @@ This is my new site
       {
          string text =
 atStart + @"Title: Some Test Thing
-Date: 12/08/2005";
+Date: 12/08/2005".ReplaceLineEndings();
 
          var round = parser.GetMatches(text).ToList();
          Assert.AreEqual(2, round.Count);

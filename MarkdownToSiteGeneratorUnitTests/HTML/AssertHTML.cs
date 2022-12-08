@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGeneratorUnitTests.HTML
 {
-   internal static class AssertHelp
+   internal static class AssertHTML
    {
       public static void AssertMetadata(HtmlDocument doc, Action<HtmlSymbol>[] childVerifications)
       {
@@ -33,6 +33,12 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
          }
       }
 
+      public static void AssertParagraph(HtmlSymbol symb, Action<HtmlSymbol>[] childVerifications)
+      {
+         Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Paragraph));
+         AssertChildren(symb, childVerifications);
+      }
+
       public static void AssertParagraph(HtmlSymbol symb, string text)
       {
          Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Paragraph));
@@ -42,8 +48,14 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
       public static void AssertPlainContent(HtmlSymbol symb, string text)
       {
          Assert.AreEqual(1, symb.Children.Count);
-         Assert.IsInstanceOfType(symb.Children[0], typeof(MarkdownToSiteGenerator.HTML.LiteralText));
-         Assert.AreEqual(text, ((MarkdownToSiteGenerator.HTML.LiteralText)symb.Children[0]).ToString());
+         var child = symb.Children[0];
+         AssertLiteralText(child, text);
+      }
+
+      public static void AssertLiteralText(HtmlSymbol child, string text)
+      {
+         Assert.IsInstanceOfType(child, typeof(MarkdownToSiteGenerator.HTML.LiteralText));
+         Assert.AreEqual(text, ((MarkdownToSiteGenerator.HTML.LiteralText)child).ToString());
       }
 
       public static void AssertHeading(HtmlSymbol symb, byte level, string text)

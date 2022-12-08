@@ -46,9 +46,19 @@ namespace MarkdownToSiteGenerator
          List<(TPathIn location, SymbolisedDocument doc)> docs = await ParseAllInputs().ToListAsync();
          List<(TPathIn location, string title)> withTitle = GetTitles(docs);
 
+         // Check that titles are well formed
+         // This is important to avoid a crash when creating the dictionary and
+         // to allow links to work when only incorrect due to mismatched case
+         if (withTitle.Select(a => a.title.ToLowerInvariant().Replace(' ', '_')).ContainsDuplicates())
+         {
+            throw new Exception("Page titles are not unique. Titles are not case-sensitive, and underscores and spaces are considered equivalent");
+         }
+
+         var allPagesByTitle = withTitle.ToDictionary(a => a.title, a => a.location);
+
          foreach ((TPathIn location, SymbolisedDocument doc) in docs)
          {
-            await converter.ConvertAndWriteHTML(doc, location, withTitle, config);
+            await converter.ConvertAndWriteHTML(doc, location, allPagesByTitle, withTitle, config);
          }
 
          await GenerateSiteMapIfConfigAllows(config, withTitle);

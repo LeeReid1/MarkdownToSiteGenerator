@@ -20,7 +20,7 @@ namespace MarkdownToSiteGeneratorUnitTests
 # My Cat page
 
 Ok, not much to say, really. But these animals are certainly popular.
-";
+".ReplaceLineEndings();
          SymbolisedDocument sd = new(source);
       }
 
@@ -57,7 +57,7 @@ Ok, not much to say, really. But these animals are certainly popular.
 # Another title
 
 Ok, not much to say, really. But these animals are certainly popular.
-";
+".ReplaceLineEndings();
          SymbolisedDocument sd = new(source);
 
          // manually parse the text
@@ -85,7 +85,7 @@ Ok, not much to say, really. But these animals are certainly popular.
 # Another title
 
 Ok, not much to say, really. But these animals are certainly popular.
-";
+".ReplaceLineEndings();
          SymbolisedDocument sd = new(source);
 
          // manually parse the text
@@ -116,7 +116,7 @@ Ok, not much to say, really. But these animals are certainly popular.
 # Another title
 
 Ok, not much to say, really. But these animals are certainly popular.
-";
+".ReplaceLineEndings();
          SymbolisedDocument sd = new(source);
 
          // manually parse the text
@@ -145,7 +145,7 @@ Ok, not much to say, really. But these animals are certainly popular.
 
 # Another title
 
-";
+".ReplaceLineEndings();
          SymbolisedDocument sd = new(source);
 
          // manually parse the text

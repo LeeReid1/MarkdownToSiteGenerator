@@ -2,7 +2,7 @@
 {
    internal class MarkdownParser
    {
-      readonly IReadOnlyList<TopLevelObjectParser> topLevelParsers = new List<TopLevelObjectParser>()
+      readonly IReadOnlyList<ParentMarkdownSymbolParser> topLevelParsers = new List<ParentMarkdownSymbolParser>()
       {
          new MetadataParser(),
          new HeaderSymbolParser(1),

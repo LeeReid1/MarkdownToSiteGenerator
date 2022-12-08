@@ -28,6 +28,29 @@ Directories can be nested as deep as you would like and will reflect the final s
 
 You can optionally include a config.ini file in the top directory of your input to change how the site is generated. See the examples folder for relevant settings.
 
+## Links
+
+
+### Linking between pages
+
+To link between pages, link to the title of that file, not its path or destination
+```
+[the content of the link](title_of_the_that_file)
+```
+
+If your page title contains spaces, replace them with underscores in the link. For more information on titles, see Metadata in this document.
+
+Links written in this way are checked for correctness. An exception is thrown if the page is not found.
+
+### Linking between
+
+You can also link directly to urls, which will not be altered, in the normal way. These must begin with `/`, `//`, `https://` or `www.`:
+
+```
+[the content of the link](https://example.com)
+```
+
+
 ## Metadata
 
 Add metadata to MD documents like so (including the blank line):
@@ -47,6 +70,8 @@ The title metadata tag is special and used for:
 2. `<title>` in the html head (rather than `<meta>`)
 
 If you do not provide a title tag, the first H1 is used in its place.
+
+It is critical that your pages never have identical titles as it makes linking impossible. Duplicate titles will result in an exception.
 
 ## Limitations
 

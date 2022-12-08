@@ -77,7 +77,7 @@ This is my new site
 * Test one
 * Test two
 
-";
+".ReplaceLineEndings();
 
          Assert.AreEqual(0, h.GetMatches(text).Count());
       }
@@ -98,7 +98,7 @@ This is my new site
 * Test one
 * Test two
 
-";
+".ReplaceLineEndings();
 
          var round = h.GetMatches(text).ToList();
          Assert.AreEqual(1, round.Count);
@@ -124,7 +124,7 @@ Some more paragraph text
 
 Final paragraph text
 
-";
+".ReplaceLineEndings();
          
          var round = h.GetMatches(text).ToList();
          Assert.AreEqual(1, round.Count);
@@ -150,7 +150,7 @@ This is my new site
 * ## Not subheading Test one
 * Test two
 
-## Final one";
+## Final one".ReplaceLineEndings();
 
          var round = h.GetMatches(text).ToList();
          Assert.AreEqual(3, round.Count);

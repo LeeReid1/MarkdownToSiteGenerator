@@ -50,22 +50,22 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
          //    * dog2
 
 
-         AssertHelp.AssertDocument(doc, new Action<HtmlSymbol>[]
+         AssertHTML.AssertDocument(doc, new Action<HtmlSymbol>[]
          {   
-            result => { AssertHelp.AssertUnorderedList(result);
-                        AssertHelp.AssertChildren(result, new Action<HtmlSymbol>[]
+            result => { AssertHTML.AssertUnorderedList(result);
+                        AssertHTML.AssertChildren(result, new Action<HtmlSymbol>[]
                         {
-                           a=>{AssertHelp.AssertListItem(a); AssertHelp.AssertOnlyContainsLink(a,"catty", "/cat.html"); },
-                           a=>{AssertHelp.AssertListItem(a); AssertHelp.AssertOnlyContainsLink(a,"catty two", "/cat2.svg"); },
-                           other=>{ AssertHelp.AssertListItem(other);
-                                    AssertHelp.AssertChildren(other, new Action<HtmlSymbol>[]
+                           a=>{AssertHTML.AssertListItem(a); AssertHTML.AssertOnlyContainsLink(a,"catty", "/cat.html"); },
+                           a=>{AssertHTML.AssertListItem(a); AssertHTML.AssertOnlyContainsLink(a,"catty two", "/cat2.svg"); },
+                           other=>{ AssertHTML.AssertListItem(other);
+                                    AssertHTML.AssertChildren(other, new Action<HtmlSymbol>[]
                                     {
                                        child =>
-                                          {  AssertHelp.AssertUnorderedList(child);
-                                           AssertHelp.AssertChildren(child, new Action<HtmlSymbol>[]
+                                          {  AssertHTML.AssertUnorderedList(child);
+                                           AssertHTML.AssertChildren(child, new Action<HtmlSymbol>[]
                                            {
-                                              dog =>  {AssertHelp.AssertListItem(dog); AssertHelp.AssertOnlyContainsLink(dog,"other dog", "/other/dog.txt"); },
-                                              dog2 => {AssertHelp.AssertListItem(dog2); AssertHelp.AssertOnlyContainsLink(dog2,"last", "/other/dog2.txt"); }
+                                              dog =>  {AssertHTML.AssertListItem(dog); AssertHTML.AssertOnlyContainsLink(dog,"other dog", "/other/dog.txt"); },
+                                              dog2 => {AssertHTML.AssertListItem(dog2); AssertHTML.AssertOnlyContainsLink(dog2,"last", "/other/dog2.txt"); }
                                            });
                                           }
 

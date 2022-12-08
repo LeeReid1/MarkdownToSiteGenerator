@@ -11,7 +11,7 @@ namespace MarkdownToSiteGenerator.Markdown
       private readonly Lazy<Regex> r;
       public MarkdownSymbolParser()
       {
-         r = new Lazy<Regex>(() => RegexStr.StartsWith(@"(") ? new Regex(RegexStr, RegexOptions.Multiline) : throw new MarkdownParseException($"Regex expected to begin with ( to indicate grouping into two chunks, but got: {RegexStr}"));
+         r = new Lazy<Regex>(() => RegexStr.StartsWith(@"(") ? new Regex(RegexStr, RegexOptions.Multiline) : throw new MarkdownParseException($"Regex expected to begin with ( to indicate grouping into chunks, but got: {RegexStr}"));
       }
 
       public bool MatchesLine(ReadOnlySpan<char> sourceSpan) => r.Value.IsMatch(sourceSpan);
@@ -29,10 +29,20 @@ namespace MarkdownToSiteGenerator.Markdown
          }
       }
 
-      private static SymbolLocation MatchToSymbolLocation(Match m)
+      protected virtual SymbolLocation MatchToSymbolLocation(Match m)
       {
-         return new(ToRange(m.Groups[1]), ToRange(m.Groups[2]), ToRange(m.Groups[3]));
-
+         if (m.Groups.Count == 4)
+         {
+            return new(ToRange(m.Groups[1]), ToRange(m.Groups[2]), ToRange(m.Groups[3]));
+         }
+         else if (m.Groups.Count == 5)
+         {
+            return new(ToRange(m.Groups[1]), ToRange(m.Groups[2]), ToRange(m.Groups[3]), ToRange(m.Groups[4]));
+         }
+         else
+         {
+            throw new Exception("Expected 3 or 4 capture groups");
+         }
          static SimpleRange ToRange(Group g) => new(g.Index, g.Index + g.Length);
       }
 
