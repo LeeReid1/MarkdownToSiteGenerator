@@ -21,7 +21,7 @@ namespace MarkdownToSiteGenerator.HTML
          sb.AppendLine("<div class=\"container-fluid\">");
          if(!string.IsNullOrEmpty(SiteName))
          {
-            sb.AppendLine("<a class=\"navbar-brand me-auto\" style=\"margin-left: 20px\" href=\"").Append(HomePage).Append("\">").Append(SiteName).AppendLine("</a>");
+            sb.Append("<a class=\"navbar-brand me-auto\" style=\"margin-left: 20px\" href=\"").Append(HomePage).Append("\">").Append(SiteName).AppendLine("</a>");
          }
 
 sb.AppendLine(
