@@ -150,14 +150,14 @@ This is my new site
 * ## Not subheading Test one
 * Test two
 
-## Final one".ReplaceLineEndings();
+## Final one (updated)".ReplaceLineEndings();
 
          var round = h.GetMatches(text).ToList();
          Assert.AreEqual(3, round.Count);
 
          Check(text, round, 0, "## ", "Level Two!", Environment.NewLine);
          Check(text, round, 1, "## ", "Subheading?", Environment.NewLine);
-         Check(text, round, 2, "## ", "Final one", string.Empty);
+         Check(text, round, 2, "## ", "Final one (updated)", string.Empty);
       }
       static void Check(string text, List<SymbolLocation> round, int index, string expectedMarkup, string expectedContent, string expectedTail)
       {
