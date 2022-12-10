@@ -6,7 +6,7 @@
 
       public LinkParser()
       {
-         RegexStr = @"(\[)(.+?)(?:\])(?:\()(\S+?)(\))";
+         RegexStr = @"((?<!\!)\[)(.+?)(?:\])(?:\()(\S+?)(\))";
       }
 
       public override SymbolisedTextWithChildren ToSymbolisedText(SymbolLocation sl)

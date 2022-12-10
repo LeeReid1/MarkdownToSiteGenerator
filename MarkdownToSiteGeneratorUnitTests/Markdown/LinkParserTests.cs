@@ -18,6 +18,8 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
       {"[some](link.com)", true},
       {"[some](#)", true},
       {"hi there [some](link.com)", true},
+      {"![this is an image not a link](#)", false},
+      {"hi there ![image](#)", false},
       {"hi there [some](link.com) bye", true},
       {"hi there some](link.com) bye", false},
       {"hi there [some(link.com) bye", false},
