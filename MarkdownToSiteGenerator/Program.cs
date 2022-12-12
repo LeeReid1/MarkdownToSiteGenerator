@@ -7,6 +7,7 @@ internal class Program
       if (args.Length != 2)
       {
          Console.WriteLine("Please provide two arguments: a directory to read from, and a directory to write to");
+         return -1;
       }
 
       string dir_from = CleanInput(args[0]);
