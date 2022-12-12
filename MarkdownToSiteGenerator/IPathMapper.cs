@@ -1,24 +1,21 @@
 ﻿namespace MarkdownToSiteGenerator
 {
-   public interface IPathMapper<TPathIn, TPathOut>
+   public interface IPathMapper<TPathIn, TPathOut> : IPathToURLMapper<TPathIn>
    {
-      /// <summary>
-      /// Parses an output location to a URL location
-      /// </summary>
-      string GetURLLocation(TPathIn source);
-
+      string GetURL_Sitemap_HTML => "/sitemap.html";
+      string GetURL_Sitemap_XML => "/sitemap.xml";
 
       /// <summary>
       /// Gets the final location of the provided input file
       /// </summary>
       TPathOut GetDestination(TPathIn source);
       /// <summary>
-      /// Gets the final locatio of the XML sitemap
+      /// Gets the final location of the XML sitemap
       /// </summary>
       TPathOut GetDestination_Sitemap_XML();
 
       /// <summary>
-      /// Gets the final locatio of the HTML sitemap
+      /// Gets the final location of the HTML sitemap
       /// </summary>
       TPathOut GetDestination_Sitemap_HTML();
 

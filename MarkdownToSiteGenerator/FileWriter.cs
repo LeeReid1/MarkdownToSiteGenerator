@@ -19,11 +19,26 @@ namespace MarkdownToSiteGenerator
       public bool FileExists(FilePath path) => File.Exists(path.ToString());
       public async Task Write(StringBuilder content, FilePath destination)
       {
-         string dest = destination.ToAbsoluteString();
-         Directory.CreateDirectory(Path.GetDirectoryName(dest) ?? throw new NullReferenceException(nameof(destination)));
+         string dest = Write_Prepare(destination);
 
          using StreamWriter stream = new(dest, false, Encoding.UTF8, 128000);
          await stream.WriteAsync(content);
+      }
+
+      private static string Write_Prepare(FilePath destination)
+      {
+         string dest = destination.ToAbsoluteString();
+         Directory.CreateDirectory(Path.GetDirectoryName(dest) ?? throw new NullReferenceException(nameof(destination)));
+         return dest;
+      }
+
+      public async Task WriteBinary(Stream s, FilePath destination)
+      {
+         string dest = Write_Prepare(destination);
+
+         using FileStream fs = System.IO.File.OpenWrite(dest);
+         await s.CopyToAsync(fs);
+         await s.DisposeAsync();
       }
    }
 }

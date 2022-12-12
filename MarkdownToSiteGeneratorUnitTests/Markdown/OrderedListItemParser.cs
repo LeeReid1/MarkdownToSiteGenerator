@@ -71,9 +71,7 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
             Assert.AreEqual(1, parsed[0].Children.Count());
             var child = parsed[0].Children.First();
             Assert.IsInstanceOfType(child, typeof(LiteralText));
-            var fragments = ((LiteralText)child).GetContentFragments(text).ToArray();
-            Assert.AreEqual(1, fragments.Length);
-            Assert.AreEqual("this message", string.Concat(fragments));
+            Assert.AreEqual("this message", ((LiteralText)child).ExtractContent(text).ToString());
 
         }
 
@@ -102,9 +100,7 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
                 Assert.AreEqual(1, cur.Children.Count());
                 var child = cur.Children.First();
                 Assert.IsInstanceOfType(child, typeof(LiteralText));
-                var fragments = ((LiteralText)child).GetContentFragments(text).ToArray();
-                Assert.AreEqual(1, fragments.Length);
-                Assert.AreEqual(expected, string.Concat(fragments));
+                Assert.AreEqual(expected, ((LiteralText)child).ExtractContent(text).ToString());
             }
         }
     }

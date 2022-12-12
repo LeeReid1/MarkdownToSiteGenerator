@@ -5,7 +5,7 @@ namespace MarkdownToSiteGenerator.HTML
    /// <summary>
    /// Represents literal text
    /// </summary>
-   internal class LiteralText : HtmlSymbol
+   internal class LiteralText : HtmlSymbolWithChildren
    {
       protected override string TagCode => "";
 

@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
-   public interface ISymbolisedText
+   [Flags]
+   public enum FileTypes
    {
-      public IEnumerable<ISymbolisedText> Children { get; }
-
+      None = 0,
+      SourceFiles,
+      Images,
+      All = SourceFiles| Images,
    }
-
 }

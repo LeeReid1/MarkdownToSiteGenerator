@@ -1,6 +1,6 @@
 ﻿namespace MarkdownToSiteGenerator.HTML
 {
-   internal class Paragraph : HtmlSymbol
+   internal class Paragraph : HtmlSymbolWithChildren
    {
       protected override string TagCode => "p";
    }

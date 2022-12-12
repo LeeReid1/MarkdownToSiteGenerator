@@ -21,7 +21,7 @@ namespace MarkdownToSiteGenerator
          converter = new(pathMapper, sourceFileProvider, fileWriter);
       }
 
-      public IEnumerable<TPathIn> GetInputFileLocations() => sourceFileProvider.GetFileLocations(false);
+      public IEnumerable<TPathIn> GetInputFileLocations() => sourceFileProvider.GetFileLocations(FileTypes.All);
       public IEnumerable<TPathOut> GetOutputFileLocations() => GetInputFileLocations().Select(pathMapper.GetDestination);
       public IEnumerable<TPathOut> GetWillBeOverwritten() => GetOutputFileLocations().Where(fileWriter.FileExists);
 
@@ -32,7 +32,7 @@ namespace MarkdownToSiteGenerator
       /// <returns></returns>
       internal async IAsyncEnumerable<(TPathIn location, SymbolisedDocument doc)> ParseAllInputs()
       {
-         TPathIn[] locations = sourceFileProvider.GetFileLocations(true);
+         TPathIn[] locations = sourceFileProvider.GetFileLocations(FileTypes.SourceFiles);
 
          foreach (var loc in locations)
          {
@@ -44,24 +44,38 @@ namespace MarkdownToSiteGenerator
          Configuration config = Configuration.IniToConfiguration(await sourceFileProvider.GetConfigurationFileContent());
 
          List<(TPathIn location, SymbolisedDocument doc)> docs = await ParseAllInputs().ToListAsync();
-         List<(TPathIn location, string title)> withTitle = GetTitles(docs);
+         List<(TPathIn location, string title)> docTitles = GetTitles(docs);
 
-         // Check that titles are well formed
-         // This is important to avoid a crash when creating the dictionary and
-         // to allow links to work when only incorrect due to mismatched case
-         if (withTitle.Select(a => NormaliseTitle(a.title)).ContainsDuplicates())
-         {
-            throw new Exception("Page titles are not unique. Titles are not case-sensitive, and underscores and spaces are considered equivalent");
-         }
+         TitleToURLLookup<TPathIn> urlLookup = CreateURLLookup(docTitles, config);
 
-         Dictionary<string, TPathIn> allPagesByNormalisedTitle = withTitle.ToDictionary(a => NormaliseTitle(a.title), a => a.location);
-         Func<string, string> rewriteLink = title => RewriteLink(title, allPagesByNormalisedTitle);
          foreach ((TPathIn location, SymbolisedDocument doc) in docs)
          {
-            await converter.ConvertAndWriteHTML(doc, location, rewriteLink, withTitle, config);
+            await converter.ConvertAndWriteHTML(doc, location, urlLookup.GetURL, docTitles, config);
          }
 
-         await GenerateSiteMapIfConfigAllows(config, withTitle, rewriteLink);
+         await GenerateSiteMapIfConfigAllows(config, docTitles, urlLookup.GetURL);
+
+         foreach(var imInfo in sourceFileProvider.GetFileLocations(FileTypes.Images))
+         {
+            using Stream s = sourceFileProvider.GetImageFileContent(imInfo);
+            await fileWriter.WriteBinary(s, pathMapper.GetDestination(imInfo));
+         }
+         
+      }
+
+
+      private TitleToURLLookup<TPathIn> CreateURLLookup(List<(TPathIn location, string title)> docTitles, Configuration config)
+      {
+         TitleToURLLookup<TPathIn> urlLookup = new(pathMapper);
+         if (config.CreateSiteMaps)
+         {
+            // sitemap is a reserved title
+            urlLookup.AddURL("sitemap", pathMapper.GetURL_Sitemap_HTML);
+         }
+         urlLookup.AddRange(docTitles);
+         urlLookup.AddRange(sourceFileProvider.GetImageTitles());
+
+         return urlLookup;
       }
 
       private async Task GenerateSiteMapIfConfigAllows(Configuration config, IEnumerable<(TPathIn path, string title)> locations, Func<string, string> rewriteLink)
@@ -73,7 +87,7 @@ namespace MarkdownToSiteGenerator
                await WriteSiteMap_XML(config.DestinationDomain, locations.Select(a=>a.path));
             }
 
-            await WriteHTMLDocument(config, locations, rewriteLink);
+            await WriteSiteMap_HTML(config, locations, rewriteLink);
          }
       }
 
@@ -83,28 +97,12 @@ namespace MarkdownToSiteGenerator
          await fileWriter.Write(map, pathMapper.GetDestination_Sitemap_XML());
       }
 
-      private async Task WriteHTMLDocument(Configuration config, IEnumerable<(TPathIn path, string title)> locations, Func<string, string> rewriteLink)
+      private async Task WriteSiteMap_HTML(Configuration config, IEnumerable<(TPathIn path, string title)> locations, Func<string, string> rewriteLink)
       {
          HtmlDocument doc = SiteMapGenerator.CreateHTMLMap(locations.Select(a => ( new FilePath(pathMapper.GetURLLocation(a.path)), a.title)).ToList());
          HTMLGenerator.AddOptionalsToDoc(config, null, doc, rewriteLink);
          StringBuilder map = doc.Write(new StringBuilder());
          await fileWriter.Write(map, pathMapper.GetDestination_Sitemap_HTML());
-      }
-      private static string NormaliseTitle(string s) => s.Replace(' ', '_').ToLowerInvariant(); // _ is recognised as a space to allow valid markdown for titles with spaces
-      private string RewriteLink(string written, IReadOnlyDictionary<string, TPathIn> allPagesByNormalisedTitle)
-      {
-         if (allPagesByNormalisedTitle.TryGetValue(NormaliseTitle(written), out var page))
-         {
-            return pathMapper.GetURLLocation(page);
-         }
-         if (written.StartsWith("/") || written.StartsWith("//") || written.StartsWith("http://") || written.StartsWith("https://") || written.StartsWith("www."))
-         {
-            return written;
-         }
-         else
-         {
-            throw new Exception($"Could not find page {written} to link to. Write link as the page title, or as a fully qualified URL (https://)");
-         }
       }
 
 

@@ -44,9 +44,11 @@ If your page title contains spaces, replace them with underscores in the link. F
 
 Links written in this way are checked for correctness. An exception is thrown if the page is not found.
 
+The html sitemap can be linked to with the reserved title `sitemap` so long as the site map generation is turned on in config.
+
 ### Linking to URLs
 
-You can also link directly to urls, which will not be altered, in the normal way. These must begin with `/`, `//`, `https://` or `www.`:
+You can also link directly to urls, which will not be altered, in the normal way. These must begin with `http://`, `https://` or `www.`:
 
 ```
 [the content of the link](https://example.com)
@@ -87,6 +89,8 @@ The title metadata tag is special and used for:
 If you do not provide a title tag, the first H1 is used in its place.
 
 It's ok to use spaces in page titles. Take note that to link to pages which has spaces in the name, you should replace the spaces with underscores (see Linking Between Pages).
+
+Don't use existing filenames such as my-image.jpg or `sitemap` as a title.
 
 #### Avoid Duplicates
 It is critical that your pages never have identical titles as it makes linking impossible. Duplicate titles will result in an exception.

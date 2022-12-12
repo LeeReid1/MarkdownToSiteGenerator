@@ -5,17 +5,13 @@
    /// </summary>
    internal abstract class ParentMarkdownSymbolParser : MarkdownSymbolParser
    {
-      static readonly IReadOnlyList<ParentMarkdownSymbolParser> InternalParsers = new ParentMarkdownSymbolParser[]
+      static readonly IReadOnlyList<MarkdownSymbolParser> InternalParsers = new MarkdownSymbolParser[]
       {
-          new LinkParser()
+          new LinkParser(),
+          new ImageParser()
       };
 
-      public IEnumerable<SymbolisedTextWithChildren> ToSymbolisedText(string source) => ToSymbolisedText(source, 0, source.Length);
-      public IEnumerable<SymbolisedTextWithChildren> ToSymbolisedText(string source, SimpleRange sr) => ToSymbolisedText(source, sr.Start, sr.Length);
-      public IEnumerable<SymbolisedTextWithChildren> ToSymbolisedText(string source, int from, int length) => GetMatches(source, from, length).Select(ToSymbolisedText).ForEachIterable(a=>ParseContentWithinParent(source, a.Location.ContentLocation, a));
-
-      public abstract SymbolisedTextWithChildren ToSymbolisedText(SymbolLocation sl);
-
+      public override IEnumerable<SymbolisedText> ToSymbolisedText(string source, int from, int length) => GetMatches(source, from, length).Select(ToSymbolisedText).ForEachIterable(a => { if (a is SymbolisedTextWithChildren st) { ParseContentWithinParent(source, a.Location.ContentLocation, st); } });
 
       internal static void ParseContentWithinParent(string source, SimpleRange sourceRange, SymbolisedTextWithChildren st)
       {
@@ -26,8 +22,8 @@
             for (int iParser = startFromParser; iParser < InternalParsers.Count; iParser++)
             {
                // Parse the source range requested
-               ParentMarkdownSymbolParser parser = InternalParsers[iParser];
-               var children = parser.ToSymbolisedText(source, rangeToParse).ToList();
+               MarkdownSymbolParser parser = InternalParsers[iParser];
+               List<SymbolisedText> children = parser.ToSymbolisedText(source, rangeToParse).ToList();
                if (children.Count != 0)
                {
                   // Successful parsing

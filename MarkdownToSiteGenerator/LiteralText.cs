@@ -8,9 +8,7 @@
       {
       }
 
-      public override IEnumerable<string> GetContentFragments(string source)
-      {
-         yield return Location.ExtractContent(source).ToString();
-      }
+
+      public ReadOnlySpan<char> ExtractContent(string source) => Location.ExtractContent(source);
    }
 }

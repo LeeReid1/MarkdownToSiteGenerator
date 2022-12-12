@@ -63,6 +63,7 @@ namespace MarkdownToSiteGenerator.HTML
             MarkdownToSiteGenerator.Heading h => new HTML.Heading(h),
             MarkdownToSiteGenerator.Paragraph p => new HTML.Paragraph(),
             MarkdownToSiteGenerator.Link link => new HTML.Link() {  HRef= linkRewriter(link.GetHref(source).ToString()) },
+            MarkdownToSiteGenerator.Image img => new HTML.Image(linkRewriter(img.GetHref(source).ToString()), img.GetAltText(source).ToString()),
             MarkdownToSiteGenerator.List l => new HTML.List(l.IsOrdered),
             MarkdownToSiteGenerator.ListItem li => new HTML.ListItem(),
             MarkdownToSiteGenerator.LiteralText lt => new HTML.LiteralText(source, lt.Location.ContentLocation),
@@ -71,8 +72,10 @@ namespace MarkdownToSiteGenerator.HTML
          };
 
          // Recurse for children
-         sym.Children.Select(a => ToHTMLSymbols(a, source, linkRewriter)).ForEach(AddChild);
-
+         if (htmlSymb is HtmlSymbolWithChildren hswc)
+         {
+            sym.Children.Select(a => ToHTMLSymbols(a, source, linkRewriter)).ForEach(AddChild);
+         }
          return htmlSymb;
 
          void AddChild(HtmlSymbol addMe)
@@ -90,7 +93,7 @@ namespace MarkdownToSiteGenerator.HTML
             }
             else
             {
-               htmlSymb.Add(addMe);
+               hswc.Add(addMe);
             }
          }
       }

@@ -3,7 +3,7 @@
    /// <summary>
    /// Represents a list
    /// </summary>
-   internal class List : HtmlSymbol
+   internal class List : HtmlSymbolWithChildren
    {
       protected override string TagCode => IsOrdered ? "ol" : "ul";
       public bool IsOrdered { get; }

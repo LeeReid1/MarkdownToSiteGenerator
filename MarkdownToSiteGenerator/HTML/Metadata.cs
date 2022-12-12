@@ -20,9 +20,6 @@ namespace MarkdownToSiteGenerator.HTML
          this.Value = vals.value;
       }
 
-      protected override void WriteContent(StringBuilder sb)
-      { }
-
       public override StringBuilder Write(StringBuilder sb)
       {
          if (IsTitle)

@@ -26,26 +26,27 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
 
       public static void AssertChildren(HtmlSymbol doc, Action<HtmlSymbol>[] childVerifications)
       {
-         Assert.AreEqual(childVerifications.Length, doc.Children.Count);
+         HtmlSymbolWithChildren withKids = (HtmlSymbolWithChildren)doc;
+         Assert.AreEqual(childVerifications.Length, withKids.Children.Count);
          for (int i = 0; i < childVerifications.Length; i++)
          {
-            childVerifications[i].Invoke(doc.Children[i]);
+            childVerifications[i].Invoke(withKids.Children[i]);
          }
       }
 
       public static void AssertParagraph(HtmlSymbol symb, Action<HtmlSymbol>[] childVerifications)
       {
          Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Paragraph));
-         AssertChildren(symb, childVerifications);
+         AssertChildren((Paragraph)symb, childVerifications);
       }
 
       public static void AssertParagraph(HtmlSymbol symb, string text)
       {
          Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Paragraph));
-         AssertPlainContent(symb, text);
+         AssertPlainContent((Paragraph)symb, text);
       }
 
-      public static void AssertPlainContent(HtmlSymbol symb, string text)
+      public static void AssertPlainContent(HtmlSymbolWithChildren symb, string text)
       {
          Assert.AreEqual(1, symb.Children.Count);
          var child = symb.Children[0];
@@ -63,7 +64,7 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
          Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Heading));
          Assert.AreEqual(level, ((MarkdownToSiteGenerator.HTML.Heading)symb).Level);
 
-         AssertPlainContent(symb, text);
+         AssertPlainContent((MarkdownToSiteGenerator.HTML.Heading)symb, text);
       }
       public static void AssertMetadata(HtmlSymbol symb, string key, string value)
       {
@@ -75,12 +76,13 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
       {
          Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.List));
          Assert.IsTrue(((MarkdownToSiteGenerator.HTML.List)symb).IsOrdered);
-         Assert.AreEqual(symb.Children.Count, text.Count);
+         MarkdownToSiteGenerator.HTML.List l = (MarkdownToSiteGenerator.HTML.List)symb;
+         Assert.AreEqual(l.Children.Count, text.Count);
 
          for (int i = 0; i < text.Count; i++)
          {
-            Assert.IsInstanceOfType(symb.Children[i], typeof(MarkdownToSiteGenerator.HTML.ListItem));
-            AssertPlainContent(symb.Children[i], text[i]);
+            Assert.IsInstanceOfType(l.Children[i], typeof(MarkdownToSiteGenerator.HTML.ListItem));
+            AssertPlainContent((MarkdownToSiteGenerator.HTML.ListItem)l.Children[i], text[i]);
          }
       }
       
@@ -103,8 +105,18 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
          AssertPlainContent(l, content);
       }
       
-      public static void AssertOnlyContainsLink(HtmlSymbol symb, string content, string href)
+      public static void AssertImage(HtmlSymbol symb, string alt, string href)
       {
+         Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.HTML.Image));
+         Image l = (MarkdownToSiteGenerator.HTML.Image)symb;
+         Assert.AreEqual(href, l.HRef);
+         Assert.AreEqual(alt, l.AltText);
+      }
+      
+      public static void AssertOnlyContainsLink(HtmlSymbol sym, string content, string href)
+      {
+         Assert.IsInstanceOfType(sym, typeof(HtmlSymbolWithChildren));
+         HtmlSymbolWithChildren symb = (HtmlSymbolWithChildren)sym;
          Assert.AreEqual(1, symb.Children.Count);
          AssertLink(symb.Children[0], content, href);
       }

@@ -84,11 +84,11 @@ namespace MarkdownToSiteGenerator.HTML
 
          return NodeToListItem(topItem).Children[0];//.Children[0] strips out the top list item layer, leaving the list
 
-         HtmlSymbol NodeToListItem(UniqueTreeNode<string, string> tree)
+         HtmlSymbolWithChildren NodeToListItem(UniqueTreeNode<string, string> tree)
          {
             path.Add(tree.Value);
 
-            HtmlSymbol symb;
+            HtmlSymbolWithChildren symb;
             if (tree.Children.Count == 0)
             {
                ListItem li = new();

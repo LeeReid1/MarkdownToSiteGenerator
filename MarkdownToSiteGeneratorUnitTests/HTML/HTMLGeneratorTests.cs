@@ -38,6 +38,33 @@ namespace MarkdownToSiteGeneratorUnitTests.HTML
 
 
       [TestMethod]
+      public void MarkdownDocToHtmlDoc_Images()
+      {
+         string raw = @"Look at this ![photograph](my_fav_image.jpg), every time it makes ![me laugh](https://example.com/bob.png)";
+
+         var doc = new MarkdownParser().Parse(raw);
+
+         Func<string, string> swapper = a => a == "my_fav_image.jpg" ? "/best-page.jpg" : a;
+
+         HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(doc, raw, swapper);
+
+         AssertHTML.AssertDocument((HtmlDocument)made, new Action<HtmlSymbol>[]
+         {
+            s=>AssertHTML.AssertParagraph(s, new Action<HtmlSymbol>[]
+            {
+               pt => AssertHTML.AssertLiteralText(pt, "Look at this "),
+               l => AssertHTML.AssertImage(l, "photograph", "/best-page.jpg"),
+               pt => AssertHTML.AssertLiteralText(pt, ", every time it makes "),
+               l => AssertHTML.AssertImage(l, "me laugh", "https://example.com/bob.png")
+            } )
+         });
+
+
+
+      }
+
+
+      [TestMethod]
       public void MarkdownDocToHtmlDoc_ParagraphsAndHeadings()
       {
          string raw =

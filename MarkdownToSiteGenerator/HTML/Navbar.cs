@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator.HTML
 {
-   internal class Navbar : HtmlSymbol
+   internal class Navbar : HtmlSymbolWithChildren
    {
       protected override string TagCode => "nav";
       public override string CSSClass => "navbar navbar-expand-lg navbar-light bg-light";

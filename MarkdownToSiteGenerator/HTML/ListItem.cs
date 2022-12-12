@@ -4,7 +4,7 @@
    /// <summary>
    /// Represents a list item in an ordered or unordered list
    /// </summary>
-   internal class ListItem : HtmlSymbol
+   internal class ListItem : HtmlSymbolWithChildren
    {
       protected override string TagCode => "li";
    }

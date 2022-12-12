@@ -10,10 +10,10 @@ namespace MarkdownToSiteGeneratorUnitTests
    internal class AssertHelp
    {
 
-      internal static void AssertParagraph(string source, SymbolisedTextWithChildren symb, string text)
+      internal static void AssertParagraph(string source, SymbolisedText symb, string text)
       {
          Assert.IsInstanceOfType(symb, typeof(MarkdownToSiteGenerator.Paragraph));
-         AssertContainsPlainContent(source, symb, text);
+         AssertContainsPlainContent(source, (MarkdownToSiteGenerator.Paragraph)symb, text);
       }
 
       internal static void AssertContainsPlainContent(string source, MarkdownToSiteGenerator.SymbolisedTextWithChildren symb, string text)
@@ -26,7 +26,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       internal static void AssertPlainContent(ISymbolisedText item, string source, string text)
       {
          Assert.IsInstanceOfType(item, typeof(MarkdownToSiteGenerator.LiteralText));
-         Assert.AreEqual(text, ((MarkdownToSiteGenerator.LiteralText)item).GetContentFragments(source).Single());
+         Assert.AreEqual(text, ((MarkdownToSiteGenerator.LiteralText)item).ExtractContent(source).ToString());
       }
       internal static void AssertLink(ISymbolisedText item, string source, string text, string href)
       {

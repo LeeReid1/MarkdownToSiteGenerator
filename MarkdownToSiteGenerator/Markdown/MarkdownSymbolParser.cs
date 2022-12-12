@@ -48,5 +48,11 @@ namespace MarkdownToSiteGenerator.Markdown
 
 
       protected virtual bool AcceptMatch(Match match, Match? previous) => true;
+
+      public abstract SymbolisedText ToSymbolisedText(SymbolLocation sl);
+      public IEnumerable<SymbolisedText> ToSymbolisedText(string source) => ToSymbolisedText(source, 0, source.Length);
+      public IEnumerable<SymbolisedText> ToSymbolisedText(string source, SimpleRange sr) => ToSymbolisedText(source, sr.Start, sr.Length);
+      public virtual IEnumerable<SymbolisedText> ToSymbolisedText(string source, int from, int length) => GetMatches(source, from, length).Select(ToSymbolisedText);
+
    }
 }

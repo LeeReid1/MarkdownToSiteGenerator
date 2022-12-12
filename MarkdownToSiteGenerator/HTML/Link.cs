@@ -1,6 +1,6 @@
 ﻿namespace MarkdownToSiteGenerator.HTML
 {
-   internal class Link : HtmlSymbol
+   internal class Link : HtmlSymbolWithChildren
    {
       protected override string TagCode => "a";
       public string HRef { get; set; } = "#";

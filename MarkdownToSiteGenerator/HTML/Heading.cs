@@ -4,7 +4,7 @@
    /// <summary>
    /// a list item in an unodered list
    /// </summary>
-   internal class Heading : HtmlSymbol
+   internal class Heading : HtmlSymbolWithChildren
    {
       readonly MarkdownToSiteGenerator.Heading symbol;
       protected override string TagCode => $"h{symbol.Level}";

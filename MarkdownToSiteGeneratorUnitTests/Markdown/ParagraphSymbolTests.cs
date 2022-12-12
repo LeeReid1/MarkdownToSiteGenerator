@@ -22,7 +22,7 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
 
          string text =@"My paragraph links to [my site](https://example.com) still the paragraph";
 
-         SymbolisedTextWithChildren[] symbols = h.ToSymbolisedText(text).ToArray();
+         SymbolisedText[] symbols = h.ToSymbolisedText(text).ToArray();
          Assert.AreEqual(1, symbols.Length);
          Assert.IsInstanceOfType(symbols[0], typeof(MarkdownToSiteGenerator.Paragraph));
          MarkdownToSiteGenerator.Paragraph symb = (MarkdownToSiteGenerator.Paragraph)symbols[0];
@@ -42,7 +42,7 @@ namespace MarkdownToSiteGeneratorUnitTests.Markdown
 
 You can also take a look at the [site map](/sitemap.html)!".ReplaceLineEndings();
 
-         SymbolisedTextWithChildren[] symbols = h.ToSymbolisedText(text).ToArray();
+         SymbolisedText[] symbols = h.ToSymbolisedText(text).ToArray();
          Assert.AreEqual(2, symbols.Length);
 
          {
@@ -78,7 +78,7 @@ My other paragraph
 still the second paragraph
 ".ReplaceLineEndings();
 
-         SymbolisedTextWithChildren[] symbols = h.ToSymbolisedText(text).ToArray();
+         SymbolisedText[] symbols = h.ToSymbolisedText(text).ToArray();
          Assert.AreEqual(2, symbols.Length);
          AssertHelp.AssertParagraph(text, symbols[0], "My paragraph");
          AssertHelp.AssertParagraph(text, symbols[1], $"My other paragraph{Environment.NewLine}still the second paragraph");
@@ -97,7 +97,7 @@ still the second paragraph
 
 final paragraph".ReplaceLineEndings();
 
-         SymbolisedTextWithChildren[] symbols = h.ToSymbolisedText(text).ToArray();
+         SymbolisedText[] symbols = h.ToSymbolisedText(text).ToArray();
          Assert.AreEqual(3, symbols.Length);
          AssertHelp.AssertParagraph(text, symbols[0], "My paragraph");
          AssertHelp.AssertParagraph(text, symbols[1], $"My other paragraph{Environment.NewLine}still the second paragraph");
@@ -123,7 +123,7 @@ final paragraph".ReplaceLineEndings();
 
 
          int startFrom = text.IndexOf("third paragraph");
-         SymbolisedTextWithChildren[] symbols = h.ToSymbolisedText(text, startFrom, text.Length - startFrom).ToArray();
+         SymbolisedText[] symbols = h.ToSymbolisedText(text, startFrom, text.Length - startFrom).ToArray();
          Assert.AreEqual(2, symbols.Length);
          AssertHelp.AssertParagraph(text, symbols[0], "third paragraph");
          AssertHelp.AssertParagraph(text, symbols[1], $"final paragraph");

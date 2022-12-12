@@ -9,7 +9,6 @@
       }
 
       
-      public override IEnumerable<string> GetContentFragments(string source) => Children.SelectMany(a=>a.GetContentFragments(source));
 
    }
 }

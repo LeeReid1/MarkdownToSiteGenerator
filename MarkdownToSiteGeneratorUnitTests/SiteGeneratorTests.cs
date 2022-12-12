@@ -15,7 +15,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       public void GetWillBeOverwritten()
       {
          Moq.Mock<ISourceFileProvider<FilePath>> mockSrc = new(Moq.MockBehavior.Strict);
-         mockSrc.Setup(a => a.GetFileLocations(false)).Returns(new FilePath[] { "/test/test.md", "/test/test.jpg", "/test/test2.md" });
+         mockSrc.Setup(a => a.GetFileLocations(FileTypes.All)).Returns(new FilePath[] { "/test/test.md", "/test/test.jpg", "/test/test2.md" });
 
          Moq.Mock<IPathMapper<FilePath, FilePath>> mockMap = new(Moq.MockBehavior.Strict);
          Func<FilePath, FilePath> valueFunction = input => new FilePath(input.ToString().Replace("test", "test-output"));

@@ -13,7 +13,11 @@ namespace MarkdownToSiteGenerator
       /// </summary>
       public const string Loc_config_relative = "config.ini";
       readonly FilePath dir_top;
-      
+
+      static readonly IReadOnlyList<string> ImageSuffixes = new string[]
+      {
+         ".jpg", ".jpeg", ".bmp", ".png", ".gif", ".webp"
+      };
 
       public FileSourceProvider(FilePath dir_top)
       {
@@ -25,16 +29,42 @@ namespace MarkdownToSiteGenerator
       }
 
       public async Task<string> GetFileContent(FilePath path) => await File.ReadAllTextAsync(path.ToString());
+      public Stream GetImageFileContent(FilePath imInfo) => File.OpenRead(imInfo.ToString());
+      public FilePath[] GetFileLocations(FileTypes sourceFilesOnly)
+      {
+         List<string> extensions = new(12);
+         if(sourceFilesOnly.HasFlag(FileTypes.SourceFiles))
+         {
+            extensions.Add(".md");
+         }
+         if(sourceFilesOnly.HasFlag(FileTypes.Images))
+         {
+            extensions.AddRange(ImageSuffixes);
+         }
 
-      public FilePath[] GetFileLocations(bool sourceFilesOnly) => Directory.GetFiles(dir_top.ToAbsoluteString(), sourceFilesOnly ? "*" : "*.md", SearchOption.AllDirectories)
-                                                                           .Select(a => new FilePath(a))
-                                                                           .Where(a => !(a.Parts[^1] == Loc_config_relative)) // don't return the settings file as content
-                                                                           .ToArray();
-
+         return Directory.EnumerateFiles(dir_top.ToAbsoluteString(),"*", SearchOption.AllDirectories)
+                  .Where(a => extensions.Contains(Path.GetExtension(a), StringComparer.InvariantCultureIgnoreCase))
+                  .Select(a => new FilePath(a))
+                  .ToArray();
+      }
       public async Task<string?> GetConfigurationFileContent()
       {
          string path = (dir_top + Loc_config_relative).ToString();
          return File.Exists(path) ? await GetFileContent(path) : null;
       }
+
+      public string GetImageTitle(FilePath path)
+      {
+         if(path.IsFile)
+         {
+            return path.Parts[^1];
+         }
+         else
+         {
+            throw new ArgumentException("Path does not point to an image file");
+         }
+      }
+
+
    }
 }

@@ -29,7 +29,7 @@ namespace MarkdownToSiteGenerator
          TPathOut destination = pathMapper.GetDestination(sourceLocation);
          if (writer.FileExists(destination))
          {
-            throw new Exception("File already exists at destination");
+            throw new Exception($"File {sourceLocation} already exists at destination {destination}");
          }
          
          var menu = inMenu?.Select(a=>(pathMapper.GetURLLocation(a.sourceLocation), a.title)).ToArray();

@@ -9,7 +9,6 @@
          this.Location = location;
       }
 
-      public abstract IEnumerable<string> GetContentFragments(string source);
 
       int IComparable.CompareTo(object? obj) => obj is SymbolisedText ist ? Location.CompareTo(ist.Location) : 0;
    }

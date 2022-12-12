@@ -7,5 +7,6 @@ namespace MarkdownToSiteGenerator
       bool FileExists(TPathOut path);
       void Delete(TPathOut path);
       Task Write(StringBuilder content, TPathOut destination);
+      Task WriteBinary(Stream s, TPathOut pathOut);
    }
 }

@@ -93,7 +93,7 @@ Oh, another one here! Again, not so long";
          Assert.IsTrue(s.Items[0] is LiteralText);
          LiteralText lt = (LiteralText)s.Items[0];
 
-         Assert.AreEqual(expected, lt.GetContentFragments(source).Single());
+         Assert.AreEqual(expected, lt.ExtractContent(source).ToString());
       }
 
       /// <summary>

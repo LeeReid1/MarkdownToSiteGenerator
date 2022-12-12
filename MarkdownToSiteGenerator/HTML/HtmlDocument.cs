@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator.HTML
 {
-   internal class HtmlDocument : HtmlSymbol
+   internal class HtmlDocument : HtmlSymbolWithChildren
    {
       protected override string TagCode => "html";
       protected override string TagMetaData => "lang=\"en-nz\"";

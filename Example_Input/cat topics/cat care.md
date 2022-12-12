@@ -14,3 +14,5 @@ The markdown for this file contains a subheading. No problem. I've also added so
 1. They also need a balanced diet of high-quality cat food, and plenty of fresh water
 1. Regular grooming, including brushing their fur and clipping their nails, is also important for their health and well-being
 1. Cats should be kept indoors to protect them from dangers such as traffic, other animals, and diseases
+
+![Oh, a cat again. Notice that we can just use the filename even though the file is not in this directory. That's because all images end up in a flattened directory. You'll just see this alt text if you're on your filesystem or github. The cat will appear when files are hosted.](cat.jpg)
