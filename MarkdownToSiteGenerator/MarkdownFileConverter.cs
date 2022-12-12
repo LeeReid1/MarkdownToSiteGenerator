@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Converts markdown to html, one document at a time
+   /// </summary>
    internal class MarkdownFileConverter<TPathIn, TPathOut>
    {
       readonly ISourceFileProvider<TPathIn> sourceProvider;

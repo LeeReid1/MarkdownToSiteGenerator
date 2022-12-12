@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Generates a full site from a collection of markdown, image, and config files
+   /// </summary>
+   /// <typeparam name="TPathIn"></typeparam>
+   /// <typeparam name="TPathOut"></typeparam>
    public class SiteGenerator<TPathIn, TPathOut> where TPathIn:IComparable
    {
       readonly ISourceFileProvider<TPathIn> sourceFileProvider;

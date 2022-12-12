@@ -1,5 +1,8 @@
 ﻿namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Notates pure content in a source document
+   /// </summary>
    internal class LiteralText : SymbolisedText
    {
       public override IEnumerable<ISymbolisedText> Children => Enumerable.Empty<ISymbolisedText>();

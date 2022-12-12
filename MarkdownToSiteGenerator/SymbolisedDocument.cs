@@ -1,5 +1,8 @@
 ﻿namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// A source document whose text content have been parsed into symbols such as paragraph, heading, image
+   /// </summary>
    internal class SymbolisedDocument : SymbolisedTextWithChildren
    {
       public override IEnumerable<ISymbolisedText> Children => Items;

@@ -1,5 +1,8 @@
 ﻿namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Base class. Denotes a section of text that represents something, such as a heading or a paragraph
+   /// </summary>
    internal abstract class SymbolisedText : ISymbolisedText, IComparable
    {
       public SymbolLocation Location { get; }

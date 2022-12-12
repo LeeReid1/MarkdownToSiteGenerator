@@ -11,7 +11,7 @@ namespace MarkdownToSiteGeneratorUnitTests
    public class FileSourceProviderTests
    {
       FilePath? dir;
-      FileSourceProvider fsp;
+      FileSourceProvider? fsp;
 
       [TestInitialize]
       public void Initialize()
@@ -40,6 +40,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       public async Task GetConfigurationFileContent()
       {
          Assert.IsNotNull(dir);
+         Assert.IsNotNull(fsp);
 
          string content = Guid.NewGuid().ToString();
          File.WriteAllText((dir + FileSourceProvider.Loc_config_relative).ToString(), content);
@@ -52,6 +53,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [TestMethod]
       public async Task GetConfigurationFileContent_Empty()
       {
+         Assert.IsNotNull(fsp);
          string? foundContent = await fsp.GetConfigurationFileContent();
          Assert.IsNull(foundContent);
       }
@@ -62,6 +64,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [DataRow(FileTypes.Images)]
       public void GetFileLocations_Empty(FileTypes types)
       {
+         Assert.IsNotNull(fsp);
          Assert.AreEqual(0, fsp.GetFileLocations(types).Length);
       }
 
@@ -73,6 +76,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       public void GetFileLocations(FileTypes ft, int expectedFrom, int count)
       {
          Assert.IsNotNull(dir);
+         Assert.IsNotNull(fsp);
          FilePath[] locs = new []
          {
             dir + "my-image-0.jpg",
@@ -112,6 +116,8 @@ namespace MarkdownToSiteGeneratorUnitTests
       public void GetImageTitles()
       {
          Assert.IsNotNull(dir);
+         Assert.IsNotNull(fsp);
+
          FilePath[] locs = new []
          {
             dir + "my-image-0.jpg",
@@ -138,9 +144,9 @@ namespace MarkdownToSiteGeneratorUnitTests
             Assert.AreEqual(7, found.Length);
             for (int i = 0; i < found.Length; i++)
             {
-               var cur = found[i];
-               Assert.AreEqual(locs[i], cur.location);
-               Assert.AreEqual($"my-image-{i}{Path.GetExtension(locs[i].Parts[^1])}", cur.title);
+               var (location, title) = found[i];
+               Assert.AreEqual(locs[i], location);
+               Assert.AreEqual($"my-image-{i}{Path.GetExtension(locs[i].Parts[^1])}", title);
             }
 
          }
@@ -166,6 +172,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       {
          // Image titles are just the filename
          Assert.IsNotNull(dir);
+         Assert.IsNotNull(fsp);
 
          Assert.IsFalse(string.IsNullOrEmpty(dir.ToAbsoluteString()), "sanity check");
 

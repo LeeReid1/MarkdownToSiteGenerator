@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Notates markup and content denoting a hyperlink in a source document
+   /// </summary>
    internal class Link : SymbolisedTextWithChildren
    {
       /// <summary>

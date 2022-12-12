@@ -1,5 +1,8 @@
 ﻿namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Notates markup for a document's metadata
+   /// </summary>
    internal class Metadata : SymbolisedTextWithChildren
    {
       public Metadata(SymbolLocation location) : base(location)

@@ -61,7 +61,7 @@ namespace MarkdownToSiteGenerator.HTML
          }
 
 
-         UniqueTreeNode<string, string> tree = new UniqueTreeNode<string, string>("");
+         UniqueTreeNode<string, string> tree = new("");
          foreach (var item in relativeUrls)
          {
             var leaf = tree.AddValueByPath(item.path.Parts.Skip(1));//skip the empty entry as we've already made that node
@@ -80,7 +80,7 @@ namespace MarkdownToSiteGenerator.HTML
 
       private static HtmlSymbol TreeToHTML(UniqueTreeNode<string, string> topItem)
       {
-         List<string> path = new List<string>();
+         List<string> path = new();
 
          return NodeToListItem(topItem).Children[0];//.Children[0] strips out the top list item layer, leaving the list
 

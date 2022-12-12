@@ -41,7 +41,7 @@ namespace MarkdownToSiteGenerator
                                            .TakeWhile(a => a.Start <= thisEnd)
                                            .ToList();
 
-         List<SimpleRange> gaps = new List<SimpleRange>();
+         List<SimpleRange> gaps = new();
 
          int pos = thisStart;
          int excludeTill = pos;
@@ -65,5 +65,19 @@ namespace MarkdownToSiteGenerator
       }
 
       public bool Equals(SimpleRange other)=> this.Start == other.Start && this.End == other.End;
+
+      public override bool Equals(object? obj) => obj is SimpleRange sr && Equals(sr);
+
+      public override int GetHashCode()
+      {
+         unchecked
+         {
+            return (94550977 + Start * 29) ^ End;
+         }
+      }
+
+      public static bool operator ==(SimpleRange left, SimpleRange right) => left.Equals(right);
+
+      public static bool operator !=(SimpleRange left, SimpleRange right) => !(left == right);
    }
 }

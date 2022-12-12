@@ -1,7 +1,7 @@
 ﻿namespace MarkdownToSiteGenerator
 {
     /// <summary>
-    /// Represents an item in an ordered list of bullet points
+    /// Represents markup+content for an item in an list of bullet points
     /// </summary>
     internal class ListItem : SymbolisedTextWithChildren
     {

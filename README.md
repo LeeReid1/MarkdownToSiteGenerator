@@ -4,7 +4,7 @@
 
 This solution builds a static multiple-HTML-page site from a directory of markdown files that can be hosted without an application layer. The builder produces pages based on a standard Bootstrap HTML5 style, including a drop-down menu to navigate. Images, JS, and style sheets are placed in separate directories.
 
-This solution is largely public as example of my personal code and development style. It is written from scratch in a test-driven-development oriented style, in C# 9.0 and .NET Core 7.0. 
+This solution is largely public as example of my personal code and development style. It is written from scratch in a test-driven-development oriented style, in C# 11 and .NET Core 7.0. 
 
 The solution is designed to be extensible - parsing documents other than markdown, for example, or producing documents other than HTML. 
 

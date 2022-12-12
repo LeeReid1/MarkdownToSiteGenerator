@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Notates content for a paragraph in a source document
+   /// </summary>
    internal class Paragraph : SymbolisedTextWithChildren
    {
       public Paragraph(SymbolLocation sl) : base(sl) { }

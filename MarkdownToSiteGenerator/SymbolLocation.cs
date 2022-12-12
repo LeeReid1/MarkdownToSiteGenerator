@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Location of markup and content within a source document
+   /// </summary>
    internal readonly struct SymbolLocation : IComparable<SymbolLocation>, IComparable
    {
       public SimpleRange ContentLocation { get; }
@@ -15,7 +18,7 @@ namespace MarkdownToSiteGenerator
       /// <summary>
       /// The area this takes up in total
       /// </summary>
-      public SimpleRange FullRange => new SimpleRange(MarkupLocation_Head.Start, MarkupLocation_Tail.End);
+      public SimpleRange FullRange => new(MarkupLocation_Head.Start, MarkupLocation_Tail.End);
 
       public SymbolLocation(SimpleRange headMarkupLocation, SimpleRange contentLocation, SimpleRange contentLocation2, SimpleRange tailMarkupLocation)
       {

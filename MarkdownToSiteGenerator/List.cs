@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Notates markup and content denoting a list in a source document
+   /// </summary>
    internal class List : SymbolisedTextWithChildren
    {
       public bool IsOrdered => Items.Count > 0 && ((ListItem)Items[0]).Ordered;

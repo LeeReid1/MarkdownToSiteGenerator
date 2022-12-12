@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Converts between resource titles/names and urls
+   /// </summary>
+   /// <typeparam name="TPathIn"></typeparam>
    internal class TitleToURLLookup<TPathIn>
    {
       readonly Dictionary<string, string> urlByTitle = new(StringComparer.InvariantCultureIgnoreCase);

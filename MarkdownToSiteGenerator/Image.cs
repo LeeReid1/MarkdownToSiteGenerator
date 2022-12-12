@@ -1,5 +1,8 @@
 ﻿namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Notates markup denoting an image, and its alt text, in a source document
+   /// </summary>
    internal class Image : SymbolisedText
    {
       public override IEnumerable<ISymbolisedText> Children => Enumerable.Empty<ISymbolisedText>();

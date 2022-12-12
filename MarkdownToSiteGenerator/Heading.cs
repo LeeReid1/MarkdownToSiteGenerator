@@ -2,6 +2,9 @@
 
 namespace MarkdownToSiteGenerator
 {
+   /// <summary>
+   /// Notates markup+content denoting a heading in a source document
+   /// </summary>
    internal class Heading : SymbolisedTextWithChildren
    {
       public byte Level { get; }
