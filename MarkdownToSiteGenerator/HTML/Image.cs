@@ -12,6 +12,7 @@
       {
          HRef= href;
          AltText = altText;
+         this.CSSClass = "img-fluid";
       }
    }
 }
