@@ -31,7 +31,7 @@
       {
          if(other == null) return 0;
 
-         return StringComparer.OrdinalIgnoreCase.Compare(string.Join('/', Parts.ToArray()), string.Join('/', Parts.ToArray()));
+         return StringComparer.OrdinalIgnoreCase.Compare(string.Join('/', Parts.ToArray()), string.Join('/', other.Parts.ToArray()));
       }
    }
 }
