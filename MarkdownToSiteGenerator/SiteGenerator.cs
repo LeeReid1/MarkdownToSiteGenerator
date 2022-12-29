@@ -55,11 +55,11 @@ namespace MarkdownToSiteGenerator
          TitleToURLLookup<TPathIn> urlLookup = CreateURLLookup(docTitles, config);
 
          string[] styleUrls = GetStyleFileLocations().Select(pathMapper.GetURLLocation).ToArray();
-         
 
+         var inMenu = docTitles.OrderBy(a => a.location).ToArray();
          foreach ((TPathIn location, SymbolisedDocument doc) in docs)
          {
-            await converter.ConvertAndWriteHTML(doc, location, urlLookup.GetURL, docTitles, config, styleUrls);
+            await converter.ConvertAndWriteHTML(doc, location, urlLookup.GetURL, inMenu, config, styleUrls);
          }
 
          await GenerateSiteMapIfConfigAllows(config, docTitles, urlLookup.GetURL, styleUrls);
