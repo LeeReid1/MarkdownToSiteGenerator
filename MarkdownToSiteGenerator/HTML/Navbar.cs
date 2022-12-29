@@ -9,7 +9,7 @@ namespace MarkdownToSiteGenerator.HTML
    internal class Navbar : HtmlSymbolWithChildren
    {
       protected override string TagCode => "nav";
-      public override string CSSClass => "navbar navbar-light bg-light";
+      public override string CSSClass => "navbar navbar-light bg-light"; // add navbar-expand-lg to have this show, rather than the hamburger, when the screen is wide
       public string? SiteName { get; set; }
       public string HomePage { get; set; }
       public Navbar(string homePage)
