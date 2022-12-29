@@ -10,8 +10,9 @@ namespace MarkdownToSiteGenerator
    public enum FileTypes
    {
       None = 0,
-      SourceFiles,
-      Images,
-      All = SourceFiles| Images,
+      SourceFiles=0x1,
+      Images = 0x2,
+      Style = 0x4,
+      All = SourceFiles| Images | Style,
    }
 }

@@ -62,6 +62,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       [DataRow(FileTypes.All)]
       [DataRow(FileTypes.SourceFiles)]
       [DataRow(FileTypes.Images)]
+      [DataRow(FileTypes.Style)]
       public void GetFileLocations_Empty(FileTypes types)
       {
          Assert.IsNotNull(fsp);
@@ -69,7 +70,7 @@ namespace MarkdownToSiteGeneratorUnitTests
       }
 
       [TestMethod]
-      [DataRow(FileTypes.All, 0, 9)]
+      [DataRow(FileTypes.All, 0, 10)]
       [DataRow(FileTypes.SourceFiles, 7, 2)]
       [DataRow(FileTypes.Images, 0, 7)]
       [DataRow(FileTypes.None, 0, 0)]
@@ -88,6 +89,7 @@ namespace MarkdownToSiteGeneratorUnitTests
             dir + "my-image-6.gif",
             dir + "bob.md",
             dir + "bob2.md",
+            dir + "my style.css",
             dir + "config.ini", // shouldn't be found
             dir + ".gitattributes", // shouldn't be found
             dir + ".gitignore", // shouldn't be found

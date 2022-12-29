@@ -20,10 +20,10 @@ namespace MarkdownToSiteGenerator.HTML
          this.config = config;
       }
 
-      public StringBuilder Generate(Func<string, string> linkRewriter, ICollection<(string url, string title)>? itemsInNavBar = null)
+      public StringBuilder Generate(Func<string, string> linkRewriter, ICollection<(string url, string title)>? itemsInNavBar = null, IEnumerable<string>? styleURLs=null)
       {
          HTML.HtmlDocument htmlDoc = (HtmlDocument)ToHTMLSymbols(doc, doc.Source, linkRewriter);
-         AddOptionalsToDoc(config, itemsInNavBar, htmlDoc, linkRewriter);
+         AddOptionalsToDoc(config, itemsInNavBar, htmlDoc, linkRewriter, styleURLs);
 
          return htmlDoc.Write(new StringBuilder());
       }
@@ -31,7 +31,7 @@ namespace MarkdownToSiteGenerator.HTML
       /// <summary>
       /// Adds things other than content to the doc, like the navigation bar and styling
       /// </summary>
-      internal static void AddOptionalsToDoc(Configuration config, ICollection<(string url, string title)>? itemsInNavBar, HtmlDocument htmlDoc, Func<string, string> linkRewriter)
+      internal static void AddOptionalsToDoc(Configuration config, ICollection<(string url, string title)>? itemsInNavBar, HtmlDocument htmlDoc, Func<string, string> linkRewriter, IEnumerable<string>? styleURLs)
       {
          if (config.IncludeBootstrap_CSS)
          {
@@ -40,6 +40,14 @@ namespace MarkdownToSiteGenerator.HTML
          if (config.IncludeBootstrap_JS)
          {
             htmlDoc.AddToHeader("<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4\" crossorigin=\"anonymous\"></script>");
+         }
+
+         if (styleURLs != null)
+         {
+            foreach (string styleSheetURL in styleURLs)
+            {
+               htmlDoc.AddToHeader($"<link href=\"{styleSheetURL}\" rel=\"stylesheet\">");
+            }
          }
 
          if (itemsInNavBar != null)

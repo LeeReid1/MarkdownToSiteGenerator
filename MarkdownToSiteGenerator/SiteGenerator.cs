@@ -29,7 +29,8 @@ namespace MarkdownToSiteGenerator
       public IEnumerable<TPathIn> GetInputFileLocations() => sourceFileProvider.GetFileLocations(FileTypes.All);
       public IEnumerable<TPathOut> GetOutputFileLocations() => GetInputFileLocations().Select(pathMapper.GetDestination);
       public IEnumerable<TPathOut> GetWillBeOverwritten() => GetOutputFileLocations().Where(fileWriter.FileExists);
-
+      
+      TPathIn[] GetStyleFileLocations() => sourceFileProvider.GetFileLocations(FileTypes.Style);
 
       /// <summary>
       /// Parses all inputs that the source file provider identifies as source code
@@ -53,21 +54,40 @@ namespace MarkdownToSiteGenerator
 
          TitleToURLLookup<TPathIn> urlLookup = CreateURLLookup(docTitles, config);
 
+         string[] styleUrls = GetStyleFileLocations().Select(pathMapper.GetURLLocation).ToArray();
+         
+
          foreach ((TPathIn location, SymbolisedDocument doc) in docs)
          {
-            await converter.ConvertAndWriteHTML(doc, location, urlLookup.GetURL, docTitles, config);
+            await converter.ConvertAndWriteHTML(doc, location, urlLookup.GetURL, docTitles, config, styleUrls);
          }
 
-         await GenerateSiteMapIfConfigAllows(config, docTitles, urlLookup.GetURL);
+         await GenerateSiteMapIfConfigAllows(config, docTitles, urlLookup.GetURL, styleUrls);
 
-         foreach(var imInfo in sourceFileProvider.GetFileLocations(FileTypes.Images))
+         await CopyImageFiles();
+
+         await CopyCSSFiles();
+      }
+
+      private async Task CopyImageFiles()
+      {
+         foreach (var imInfo in sourceFileProvider.GetFileLocations(FileTypes.Images))
          {
             using Stream s = sourceFileProvider.GetImageFileContent(imInfo);
             await fileWriter.WriteBinary(s, pathMapper.GetDestination(imInfo));
          }
-         
       }
 
+      
+
+      private async Task CopyCSSFiles()
+      {
+         foreach (var cssInfo in GetStyleFileLocations())
+         {
+            string content = await sourceFileProvider.GetFileContent(cssInfo);
+            await fileWriter.Write(content, pathMapper.GetDestination(cssInfo));
+         }
+      }
 
       private TitleToURLLookup<TPathIn> CreateURLLookup(List<(TPathIn location, string title)> docTitles, Configuration config)
       {
@@ -83,7 +103,7 @@ namespace MarkdownToSiteGenerator
          return urlLookup;
       }
 
-      private async Task GenerateSiteMapIfConfigAllows(Configuration config, IEnumerable<(TPathIn path, string title)> locations, Func<string, string> rewriteLink)
+      private async Task GenerateSiteMapIfConfigAllows(Configuration config, IEnumerable<(TPathIn path, string title)> locations, Func<string, string> rewriteLink, IEnumerable<string>? styleURLs)
       {
          if (config.CreateSiteMaps)
          {
@@ -92,7 +112,7 @@ namespace MarkdownToSiteGenerator
                await WriteSiteMap_XML(config.DestinationDomain, locations.Select(a=>a.path));
             }
 
-            await WriteSiteMap_HTML(config, locations, rewriteLink);
+            await WriteSiteMap_HTML(config, locations, rewriteLink, styleURLs);
          }
       }
 
@@ -102,10 +122,10 @@ namespace MarkdownToSiteGenerator
          await fileWriter.Write(map, pathMapper.GetDestination_Sitemap_XML());
       }
 
-      private async Task WriteSiteMap_HTML(Configuration config, IEnumerable<(TPathIn path, string title)> locations, Func<string, string> rewriteLink)
+      private async Task WriteSiteMap_HTML(Configuration config, IEnumerable<(TPathIn path, string title)> locations, Func<string, string> rewriteLink, IEnumerable<string>? styleURLs)
       {
          HtmlDocument doc = SiteMapGenerator.CreateHTMLMap(locations.Select(a => ( new FilePath(pathMapper.GetURLLocation(a.path)), a.title)).ToList());
-         HTMLGenerator.AddOptionalsToDoc(config, null, doc, rewriteLink);
+         HTMLGenerator.AddOptionalsToDoc(config, null, doc, rewriteLink, styleURLs);
          StringBuilder map = doc.Write(new StringBuilder());
          await fileWriter.Write(map, pathMapper.GetDestination_Sitemap_HTML());
       }

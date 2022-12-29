@@ -103,6 +103,10 @@ MyTiTlE == mytitle
 My_TiTlE == my_title
 ```
 
+## Style
+
+Bootstrap is automatically included, unless turned off in the config file. Additional CSS files should be placed in the root directory. Any that are found are linked to in all generated html files.
+
 ## Limitations
 
 * This is not intended to be a complete solution for all use cases and only covers a subset of Markdown syntax. It is readily extensible, though.

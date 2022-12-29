@@ -169,5 +169,29 @@ keywords: homepage c# markdown
          });
       }
 
+
+      [TestMethod]
+      public void Generate_CSSIncluded()
+      {
+         string raw =@"Look at this [photograph](https://example.com/photograph)";
+
+         var doc = new MarkdownParser().Parse(raw);
+
+         HtmlSymbol made = HTMLGenerator.ToHTMLSymbols(doc, raw);
+
+         SymbolisedDocument d = new(raw);
+         HTMLGenerator gen = new(d, new Configuration());
+         string s = gen.Generate(a => a, styleURLs: new string[] { "/my-style.css" }).ToString();
+
+         string expected = "<link href=\"/my-style.css\" rel=\"stylesheet\">";
+
+         int index = s.IndexOf(expected);
+         Assert.AreNotEqual(-1, index);
+         int startOfHead = s.IndexOf("<head>");
+         Assert.IsTrue(index > startOfHead);
+         int endOfHead = s.IndexOf("</head>");
+         Assert.IsTrue(index < endOfHead);
+      }
+
    }
 }

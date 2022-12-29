@@ -20,7 +20,12 @@ namespace MarkdownToSiteGenerator
       public async Task Write(StringBuilder content, FilePath destination)
       {
          string dest = Write_Prepare(destination);
-
+         using StreamWriter stream = new(dest, false, Encoding.UTF8, 128000);
+         await stream.WriteAsync(content);
+      }
+      public async Task Write(string content, FilePath destination)
+      {
+         string dest = Write_Prepare(destination);
          using StreamWriter stream = new(dest, false, Encoding.UTF8, 128000);
          await stream.WriteAsync(content);
       }

@@ -37,6 +37,11 @@ namespace MarkdownToSiteGenerator
          {
             extensions.Add(".md");
          }
+         
+         if(sourceFilesOnly.HasFlag(FileTypes.Style))
+         {
+            extensions.Add(".css");
+         }
          if(sourceFilesOnly.HasFlag(FileTypes.Images))
          {
             extensions.AddRange(ImageSuffixes);
