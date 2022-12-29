@@ -11,6 +11,11 @@
           new ImageParser()
       };
 
+      static readonly IReadOnlyList<BadMarkdownChecker> MarkdownErrorParsers = new BadMarkdownChecker[]
+      {
+          new BadLinkOrImageParser_SpaceInTitleOrURL(),
+      };
+
       public override IEnumerable<SymbolisedText> ToSymbolisedText(string source, int from, int length) => GetMatches(source, from, length).Select(ToSymbolisedText).ForEachIterable(a => { if (a is SymbolisedTextWithChildren st) { ParseContentWithinParent(source, a.Location.ContentLocation, st); } });
 
       internal static void ParseContentWithinParent(string source, SimpleRange sourceRange, SymbolisedTextWithChildren st)
@@ -43,7 +48,17 @@
                }
             }
 
-            // nothing parsed. Create a literal text item
+            // nothing parsed. 
+            // Check for bad markdown
+            for (int iParser = startFromParser; iParser < MarkdownErrorParsers.Count; iParser++)
+            {
+               // Parse the source range requested
+               BadMarkdownChecker parser = MarkdownErrorParsers[iParser];
+               parser.ThrowIfBadMarkdownFound(source);
+            }
+
+
+            // Create a literal text item
             st.Items.Add(new LiteralText(rangeToParse));
             st.Items.Sort();
          }

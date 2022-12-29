@@ -45,8 +45,15 @@ namespace MarkdownToSiteGenerator
       internal async Task<SymbolisedDocument> Parse(TPathIn sourceLocation)
       {
          string content = await sourceProvider.GetFileContent(sourceLocation);
-         var doc = parser.Parse(content);
-         return doc;
+         try
+         {
+            var doc = parser.Parse(content);
+            return doc;
+         }
+         catch (MarkdownParseException ex)
+         {
+            throw new MarkdownParseException("Failed to parse " + sourceLocation!.ToString(), ex);
+         }
       }
    }
 }

@@ -54,6 +54,15 @@ Oh, another one here! Again, not so long";
       }
       
       [TestMethod]
+      public void ParseBadLink()
+      {
+         string parseMe = @"This is a paragraph with a [bad](link due to a space)";
+
+         MarkdownParser mp = new();
+         Assert.ThrowsException<MarkdownParseException>(()=> mp.Parse(parseMe));
+      }
+      
+      [TestMethod]
       public void ParseHeadings()
       {
          string parseMe =
