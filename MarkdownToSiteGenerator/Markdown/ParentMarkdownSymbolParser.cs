@@ -14,6 +14,7 @@
       static readonly IReadOnlyList<BadMarkdownChecker> MarkdownErrorParsers = new BadMarkdownChecker[]
       {
           new BadLinkOrImageParser_SpaceInTitleOrURL(),
+          new BadLinkOrImageParser_BadBrackets(),
       };
 
       public override IEnumerable<SymbolisedText> ToSymbolisedText(string source, int from, int length) => GetMatches(source, from, length).Select(ToSymbolisedText).ForEachIterable(a => { if (a is SymbolisedTextWithChildren st) { ParseContentWithinParent(source, a.Location.ContentLocation, st); } });
