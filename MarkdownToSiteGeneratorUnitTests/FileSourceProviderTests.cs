@@ -89,6 +89,11 @@ namespace MarkdownToSiteGeneratorUnitTests
             dir + "bob.md",
             dir + "bob2.md",
             dir + "config.ini", // shouldn't be found
+            dir + ".gitattributes", // shouldn't be found
+            dir + ".gitignore", // shouldn't be found
+            dir + "launch.sh", // shouldn't be found
+            dir + "launch.bash", // shouldn't be found
+            dir + "build.ps1", // shouldn't be found
          };
 
          try
